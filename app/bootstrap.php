@@ -36,11 +36,39 @@ function config(string $key, mixed $default = null): mixed
     return $value;
 }
 
+/**
+ * Detectează HTTPS din perspectiva clientului (Cloudflare Flexible / reverse proxy).
+ * Origin-ul poate fi HTTP local, dar browserul e pe https://.
+ */
+function is_https_request(): bool
+{
+    if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
+        return true;
+    }
+    $proto = strtolower((string) ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? ''));
+    if ($proto === 'https') {
+        return true;
+    }
+    // Cloudflare: CF-Visitor: {"scheme":"https"}
+    $cfVisitor = $_SERVER['HTTP_CF_VISITOR'] ?? '';
+    if ($cfVisitor !== '' && str_contains($cfVisitor, '"https"')) {
+        return true;
+    }
+    if (config('app.force_https', false)) {
+        return true;
+    }
+    $appUrl = (string) config('app.url', '');
+    if (str_starts_with($appUrl, 'https://')) {
+        return true;
+    }
+    return false;
+}
+
 function url(string $path = ''): string
 {
     $base = rtrim(config('app.url', ''), '/');
     if ($base === '') {
-        $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+        $scheme = is_https_request() ? 'https' : 'http';
         $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
         $scriptDir = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '')), '/');
         if (basename($scriptDir) === 'public') {
@@ -90,12 +118,34 @@ function export_url(?string $path): string
 
 function ws_url(): string
 {
+    // Preferat cu Cloudflare: același domeniu + path proxiat (wss://domeniu/ws)
+    $publicUrl = trim((string) config('websocket.public_url', ''));
+    if ($publicUrl !== '') {
+        return rtrim($publicUrl, '/');
+    }
+
     $host = config('websocket.public_host', '');
     if ($host === '') {
         $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-        $host = preg_replace('/:\d+$/', '', $host);
+        $host = preg_replace('/:\d+$/', '', (string) $host);
     }
-    $port = (int) config('websocket.port', 8080);
+
+    $path = trim((string) config('websocket.public_path', ''));
+    $scheme = is_https_request() ? 'wss' : 'ws';
+
+    // Path mode (nginx /ws → 127.0.0.1:3007) — fără port custom (Cloudflare proxy pe 443)
+    if ($path !== '') {
+        if ($path[0] !== '/') {
+            $path = '/' . $path;
+        }
+        return "{$scheme}://{$host}{$path}";
+    }
+
+    // Direct port mode (DNS-only / fără Cloudflare pe WS)
+    $port = (int) config('websocket.public_port', 0);
+    if ($port <= 0) {
+        $port = (int) config('websocket.port', 8080);
+    }
     if (config('is_setup')) {
         try {
             $p = \App\App::get()->settings()->get('ws_port');
@@ -105,8 +155,9 @@ function ws_url(): string
         } catch (\Throwable) {
         }
     }
-    $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'wss' : 'ws';
-    return "{$scheme}://{$host}:{$port}";
+
+    $omitPort = ($scheme === 'wss' && $port === 443) || ($scheme === 'ws' && $port === 80);
+    return $omitPort ? "{$scheme}://{$host}" : "{$scheme}://{$host}:{$port}";
 }
 
 function e(?string $value): string
