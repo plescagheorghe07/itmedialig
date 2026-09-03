@@ -131,9 +131,13 @@ function ws_url(): string
     }
 
     $path = trim((string) config('websocket.public_path', ''));
+    // În spatele Cloudflare / HTTPS: default /ws (nginx proxy), NU port :3010
+    if ($path === '' && is_https_request()) {
+        $path = '/ws';
+    }
     $scheme = is_https_request() ? 'wss' : 'ws';
 
-    // Path mode (nginx /ws → 127.0.0.1:3007) — fără port custom (Cloudflare proxy pe 443)
+    // Path mode (nginx /ws → 127.0.0.1:3010) — fără port custom (Cloudflare pe 443)
     if ($path !== '') {
         if ($path[0] !== '/') {
             $path = '/' . $path;
@@ -141,7 +145,7 @@ function ws_url(): string
         return "{$scheme}://{$host}{$path}";
     }
 
-    // Direct port mode (DNS-only / fără Cloudflare pe WS)
+    // Direct port mode (doar fără HTTPS / DNS-only)
     $port = (int) config('websocket.public_port', 0);
     if ($port <= 0) {
         $port = (int) config('websocket.port', 8080);
