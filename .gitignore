@@ -1,0 +1,9 @@
+/config.php
+/public/uploads/*
+!/public/uploads/.gitkeep
+/vendor/
+/public/exports/*
+!/public/exports/.gitkeep
+/storage/*
+!/storage/.gitkeep
+composer.lock

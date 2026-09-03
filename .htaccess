@@ -1,0 +1,31 @@
+RewriteEngine On
+RewriteBase /
+
+# Blochează acces direct la app/ și views/
+RewriteRule ^app/ - [F,L]
+RewriteRule ^views/ - [F,L]
+RewriteRule ^database/ - [F,L]
+
+# Servește fișiere statice din public/
+RewriteCond %{REQUEST_URI} ^/public/
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^ - [L]
+
+# Redirect install.php când e deja instalat (handled in PHP too)
+# Pretty URLs -> index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [QSA,L]
+
+# Security headers
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# PHP settings (dacă e permis)
+<IfModule mod_php.c>
+    php_value upload_max_filesize 10M
+    php_value post_max_size 12M
+</IfModule>
