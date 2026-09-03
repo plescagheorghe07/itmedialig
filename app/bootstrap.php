@@ -85,7 +85,13 @@ function url(string $path = ''): string
 
 function asset(string $path): string
 {
-    return url('/public/assets/' . ltrim($path, '/'));
+    $relative = ltrim($path, '/');
+    $url = url('/public/assets/' . $relative);
+    $file = BASE_PATH . '/public/assets/' . $relative;
+    if (is_file($file)) {
+        $url .= '?v=' . filemtime($file);
+    }
+    return $url;
 }
 
 function upload_url(?string $path, string $type = 'default'): string
