@@ -6,7 +6,7 @@ include __DIR__ . '/../partials/page_banner.php';
 
 <?php if (empty($archives)): ?>
 <div class="empty-state card">
-    <div class="empty-state-icon">📅</div>
+    <div class="empty-state-icon"><?= icon('calendar', 'icon icon-2xl') ?></div>
     <h3>Niciun sezon arhivat</h3>
     <p class="text-muted">După încheierea unui sezon, arhiva va apărea aici cu toate datele.</p>
 </div>

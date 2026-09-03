@@ -2,7 +2,11 @@
     <div class="hero-content">
         <span class="badge badge-live">Sezon <?= e($settings['season'] ?? '') ?></span>
         <h1><?= e($settings['tournament_name'] ?? 'Trofeu Hub') ?></h1>
-        <p>Urmărește clasamentul, meciurile live și statisticile turneului.</p>
+        <p>Urmărește clasamentul, meciurile live și statisticile turneului — totul într-un singur loc, actualizat în timp real.</p>
+        <div class="hero-cta">
+            <a href="<?= url('/clasament') ?>" class="btn btn-primary">Clasament</a>
+            <a href="<?= url('/meciuri') ?>" class="btn btn-secondary">Meciuri</a>
+        </div>
     </div>
     <div class="stats-grid">
         <div class="stat-card">

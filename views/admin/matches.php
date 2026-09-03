@@ -1,5 +1,9 @@
-<div class="page-actions">
-    <button type="button" class="btn btn-primary" onclick="document.getElementById('matchModal').showModal()">+ Adaugă meci</button>
+<div class="admin-page-intro">
+    <div>
+        <p class="admin-eyebrow">Program</p>
+        <p class="text-muted">Gestionează meciurile live, scorurile și panoul de arbitraj.</p>
+    </div>
+    <button type="button" class="btn btn-primary" onclick="document.getElementById('matchModal').showModal()"><?= icon('plus', 'icon icon-sm') ?> Adaugă meci</button>
 </div>
 
 <?php
@@ -30,7 +34,11 @@ $finished = array_filter($matches, fn($m) => $m['status'] === 'terminat');
 <?php endif; ?>
 
 <?php if (empty($matches)): ?>
-<div class="card"><p class="text-muted">Niciun meci. Adaugă primul meci.</p></div>
+<div class="empty-state card">
+    <div class="empty-state-icon"><?= icon('ball', 'icon icon-2xl') ?></div>
+    <h3>Niciun meci</h3>
+    <p class="text-muted">Adaugă primul meci din turneu.</p>
+</div>
 <?php endif; ?>
 
 <dialog id="matchModal" class="modal modal-lg">
@@ -88,11 +96,16 @@ function editMatch(m) {
     form.scor_echipa1.value = m.scor_echipa1 ?? '';
     form.scor_echipa2.value = m.scor_echipa2 ?? '';
     form.status.value = m.status;
-    form.data_meci.value = m.data_meci ? m.data_meci.slice(0,16) : '';
     form.match_tag.value = m.match_tag || 'nedefinit';
     form.locatie.value = m.locatie || '';
     form.live_link.value = m.live_link || '';
+    if (m.data_meci) form.data_meci.value = m.data_meci.replace(' ', 'T').slice(0, 16);
     document.getElementById('matchModalTitle').textContent = 'Editează meci';
     document.getElementById('matchModal').showModal();
 }
+document.getElementById('matchModal').addEventListener('close', () => {
+    document.getElementById('matchForm').reset();
+    document.getElementById('matchForm').action = '<?= url('/admin/meciuri') ?>';
+    document.getElementById('matchModalTitle').textContent = 'Adaugă meci';
+});
 </script>

@@ -94,6 +94,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     } catch (\Throwable) {
                     }
                 }
+                $migrationV5 = DbHelper::schemaFile($driver, 'migration_v5');
+                if (is_file($migrationV5)) {
+                    try {
+                        DbHelper::runSqlFile($pdo, $migrationV5);
+                    } catch (\Throwable) {
+                    }
+                }
 
                 // Create admin user
                 $hash = password_hash($adminPass, PASSWORD_DEFAULT);
@@ -172,7 +179,7 @@ $dbSession = $_SESSION['install_db'] ?? [];
 <body class="install-page">
     <div class="install-container">
         <div class="install-header">
-            <div class="logo-mark">🏆</div>
+            <div class="logo-mark"><?= icon('trophy', 'icon icon-xl') ?></div>
             <h1>Instalare Trofeu Hub</h1>
             <p>Platformă turnee fotbal — setup inițial</p>
         </div>

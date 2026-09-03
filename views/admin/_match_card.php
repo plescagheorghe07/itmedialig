@@ -24,7 +24,7 @@
     <?php if ($m['locatie']): ?><p class="admin-match-venue text-muted"><?= e($m['locatie']) ?></p><?php endif; ?>
     <div class="admin-match-actions">
         <a href="<?= url('/admin/meciuri/' . $m['id'] . '/panou') ?>" class="btn btn-sm btn-primary">
-            <?= $m['status'] === 'programat' ? '▶ Începe' : 'Panou' ?>
+            <?= $m['status'] === 'programat' ? icon('play', 'icon icon-sm') . ' Începe' : 'Panou' ?>
         </a>
         <button type="button" class="btn btn-sm btn-secondary" onclick="editMatch(<?= htmlspecialchars(json_encode($m), ENT_QUOTES) ?>)">Editează</button>
         <form method="post" action="<?= url('/admin/meciuri/' . $m['id'] . '/delete') ?>" onsubmit="return confirm('Ștergi meciul?')">

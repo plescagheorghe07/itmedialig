@@ -1,4 +1,10 @@
 <?php $tree = $bracketTree; $size = $tree['size']; ?>
+<div class="admin-page-intro">
+    <div>
+        <p class="admin-eyebrow">Playoff</p>
+        <p class="text-muted">Configurează vizual faza eliminatorie — câștigătorii avansează automat.</p>
+    </div>
+</div>
 <div class="bracket-admin-page">
     <div class="bracket-admin-toolbar card">
         <form method="get" action="<?= url('/admin/bracket') ?>" class="bracket-size-form">
@@ -9,8 +15,8 @@
                     <?php endforeach; ?>
                 </select>
             </label>
-            <a href="<?= url('/admin/bracket') ?>?size=<?= (int) ($selectedSize ?? $size) ?>&init=1" class="btn btn-secondary" onclick="return confirm('Resetezi structura bracket la <?= (int) ($selectedSize ?? $size) ?> echipe?')">Regenerează structura</a>
-            <a href="<?= url('/bracket') ?>" target="_blank" class="btn btn-ghost">Previzualizare site</a>
+            <a href="<?= url('/admin/bracket') ?>?size=<?= (int) ($selectedSize ?? $size) ?>&init=1" class="btn btn-secondary" onclick="return confirm('Resetezi structura bracket la <?= (int) ($selectedSize ?? $size) ?> echipe?')"><?= icon('refresh', 'icon icon-sm') ?> Regenerează</a>
+            <a href="<?= url('/bracket') ?>" target="_blank" class="btn btn-ghost"><?= icon('external', 'icon icon-sm') ?> Previzualizare</a>
         </form>
         <p class="hint text-muted">Alege numărul de echipe, generează structura, apoi completează meciurile. Câștigătorul avansează automat când setezi scorurile.</p>
     </div>

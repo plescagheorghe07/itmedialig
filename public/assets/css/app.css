@@ -203,6 +203,7 @@ img { max-width: 100%; display: block; object-fit: cover; }
 .hero-content { position: relative; z-index: 1; }
 .hero h1 { font-size: clamp(1.85rem, 4vw, 2.65rem); margin: .5rem 0; line-height: 1.12; font-weight: 900; letter-spacing: -.03em; color: var(--navy); }
 .hero p { color: var(--text-muted); max-width: 42ch; margin: 0; font-size: 1rem; }
+.hero-cta { display: flex; flex-wrap: wrap; gap: .55rem; margin-top: 1.25rem; }
 .stats-grid { display: flex; gap: .85rem; flex-wrap: wrap; position: relative; z-index: 1; }
 .stat-card-players .stat-value { color: var(--accent); }
 .stat-card {
@@ -436,9 +437,25 @@ dialog.modal-lg { max-width: 640px; }
 dialog::backdrop { background: rgba(15,23,42,.4); backdrop-filter: blur(3px); }
 .modal-actions { display: flex; justify-content: flex-end; gap: .75rem; margin-top: 1rem; }
 
-.login-page, .install-page {
+.login-page {
     min-height: 100vh; display: flex; align-items: center; justify-content: center;
-    background: linear-gradient(180deg, #f8fafc, #ecfdf5); padding: 2rem;
+    background:
+        radial-gradient(ellipse 70% 50% at 50% -10%, rgba(4,120,87,.15), transparent),
+        linear-gradient(180deg, #f8fafc, #eef2f7);
+    padding: 2rem;
+}
+.login-card { width: min(400px, 100%); padding: 2rem; }
+.login-header { text-align: center; margin-bottom: 1.5rem; }
+.login-header .logo-mark {
+    display: inline-grid; place-items: center; width: 56px; height: 56px;
+    border-radius: 16px; background: linear-gradient(135deg, #0f172a, #047857);
+    font-size: 1.5rem; margin-bottom: .75rem;
+}
+.login-header h1 { margin: 0; font-size: 1.5rem; color: var(--navy); }
+.login-header p { margin: .25rem 0 0; color: var(--text-muted); }
+.login-card .back-link {
+    display: block; text-align: center; margin-top: 1.25rem;
+    color: var(--text-muted); font-size: .85rem; font-weight: 600;
 }
 .text-muted { color: var(--text-muted); }
 .actions { display: flex; gap: .35rem; flex-wrap: wrap; }
@@ -787,3 +804,318 @@ dialog::backdrop { background: rgba(15,23,42,.4); backdrop-filter: blur(3px); }
     .bracket-pro-round[data-round="3"] .bracket-pro-slots { gap: 1.5rem; padding: .5rem 0; }
     .team-profile-header { flex-direction: column; text-align: center; padding: 1.5rem; }
 }
+
+/* ═══════════════════════════════════════════
+   Design system refresh — Admin + Portal
+   ═══════════════════════════════════════════ */
+.admin-eyebrow {
+    margin: 0 0 .2rem; font-size: .68rem; font-weight: 800; text-transform: uppercase;
+    letter-spacing: .1em; color: var(--primary);
+}
+.admin-page-intro {
+    display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem;
+    margin-bottom: 1.5rem; flex-wrap: wrap;
+}
+.admin-page-intro p { margin: .15rem 0 0; }
+.admin-main-panel { animation: fadeUp .35s ease; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+.admin-body {
+    background:
+        radial-gradient(ellipse 60% 40% at 0% 0%, rgba(4,120,87,.06), transparent),
+        #eef2f7;
+}
+.admin-shell { grid-template-columns: 280px 1fr; }
+.admin-sidebar {
+    background: linear-gradient(180deg, #0f172a 0%, #111827 100%);
+    border-right: none; color: rgba(255,255,255,.75); padding: 1.35rem 1rem;
+    box-shadow: 8px 0 32px rgba(15,23,42,.12);
+}
+.sidebar-brand {
+    color: #fff; border-bottom-color: rgba(255,255,255,.1);
+    gap: .75rem; align-items: center;
+}
+.sidebar-brand strong { display: block; font-size: 1.05rem; }
+.sidebar-brand small { color: rgba(255,255,255,.55); font-size: .72rem; font-weight: 500; }
+.sidebar-logo {
+    width: 42px; height: 42px; border-radius: 12px; background: linear-gradient(135deg, #059669, #10b981);
+    display: grid; place-items: center; font-size: 1.2rem; flex-shrink: 0;
+}
+.sidebar-nav a {
+    color: rgba(255,255,255,.65); border-radius: 12px; padding: .7rem .9rem; gap: .65rem;
+}
+.sidebar-nav a:hover { background: rgba(255,255,255,.08); color: #fff; }
+.sidebar-nav a.active {
+    background: linear-gradient(135deg, #059669, #047857); color: #fff;
+    box-shadow: 0 4px 14px rgba(5,150,105,.35);
+}
+.nav-ico { width: 1.25rem; text-align: center; opacity: .9; }
+.sidebar-footer { border-top-color: rgba(255,255,255,.1); gap: .5rem; }
+.sidebar-footer .btn { justify-content: center; }
+.admin-content { padding: 1.75rem 2rem 3rem; }
+.admin-topbar {
+    border-bottom: none; margin-bottom: 1.5rem; padding-bottom: 0;
+    align-items: flex-start;
+}
+.admin-topbar h1 { font-size: 1.65rem; letter-spacing: -.02em; color: var(--navy); }
+.admin-topbar-right { display: flex; align-items: center; gap: .75rem; }
+.user-badge {
+    background: #fff; box-shadow: var(--shadow-sm);
+    border-radius: 999px; padding: .45rem 1rem;
+}
+
+.admin-dash-hero {
+    display: flex; justify-content: space-between; align-items: center; gap: 1.5rem;
+    margin-bottom: 1.25rem; flex-wrap: wrap;
+    background: linear-gradient(135deg, #fff 0%, #ecfdf5 100%);
+}
+.admin-dash-hero h2 { margin: .25rem 0 .35rem; font-size: 1.35rem; color: var(--navy); }
+.admin-dash-actions { display: flex; gap: .5rem; flex-wrap: wrap; }
+.admin-stats { margin-bottom: 1.5rem; }
+.admin-quick-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem;
+}
+.admin-quick-card {
+    text-decoration: none; color: inherit; transition: transform .15s, box-shadow .15s, border-color .15s;
+}
+.admin-quick-card:hover {
+    transform: translateY(-3px); box-shadow: var(--shadow); border-color: var(--primary); text-decoration: none;
+}
+.admin-quick-ico { font-size: 1.5rem; display: block; margin-bottom: .5rem; }
+.admin-quick-card strong { display: block; margin-bottom: .25rem; color: var(--navy); }
+.admin-quick-card p { margin: 0; font-size: .85rem; color: var(--text-muted); }
+
+/* Admin teams */
+.admin-teams-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.15rem;
+}
+.admin-team-card {
+    background: #fff; border: 1px solid var(--border); border-radius: var(--radius-xl);
+    padding: 1.25rem; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; gap: 1rem;
+}
+.admin-team-card.is-highlight { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(5,150,105,.15); }
+.admin-team-card.is-inactive { opacity: .65; }
+.admin-team-card-top { display: flex; align-items: center; gap: .85rem; }
+.admin-team-card-top h3 { margin: 0 0 .35rem; font-size: 1.05rem; color: var(--navy); }
+.admin-team-link-box {
+    background: var(--surface-2); border: 1px dashed var(--border-strong);
+    border-radius: 12px; padding: .85rem;
+}
+.admin-micro-label {
+    display: block; font-size: .68rem; font-weight: 800; text-transform: uppercase;
+    letter-spacing: .06em; color: var(--text-muted); margin-bottom: .45rem;
+}
+.admin-copy-row { display: flex; gap: .4rem; }
+.manage-link-input {
+    flex: 1; font-size: .72rem; padding: .5rem .65rem; border-radius: 8px;
+    border: 1px solid var(--border); background: #fff; color: var(--text-muted);
+}
+.admin-team-actions { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: auto; }
+.badge-danger { background: var(--danger-soft); color: var(--danger); border-color: #fecaca; }
+.hint { font-size: .75rem; margin: .45rem 0 0; }
+
+/* Team portal */
+.portal-body { background: var(--bg); min-height: 100vh; }
+.portal-header {
+    background: #fff; border-bottom: 1px solid var(--border); box-shadow: var(--shadow-sm);
+}
+.portal-header-inner {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1rem 0; gap: 1rem;
+}
+.portal-brand { display: flex; align-items: center; gap: .75rem; }
+.portal-brand strong { display: block; color: var(--navy); }
+.portal-brand small { color: var(--text-muted); font-size: .75rem; }
+.portal-wrap { max-width: 960px; }
+.portal-hero {
+    display: flex; align-items: center; gap: 1.5rem; margin-bottom: 2rem; flex-wrap: wrap;
+    background: linear-gradient(135deg, #fff, #f0fdf4);
+}
+.portal-hero h1 { margin: .4rem 0 .35rem; font-size: 1.75rem; color: var(--navy); }
+.portal-form .btn { margin-top: .25rem; }
+.portal-players {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem;
+}
+.portal-player-card {
+    display: flex; flex-direction: column; align-items: center; text-align: center; gap: .75rem;
+}
+.portal-player-info { display: flex; flex-direction: column; align-items: center; gap: .2rem; }
+.portal-player-actions { display: flex; gap: .35rem; flex-wrap: wrap; justify-content: center; }
+.portal-footer { background: #fff; }
+
+/* Public polish */
+.tabs {
+    background: #fff; border: 1px solid var(--border); border-radius: 999px;
+    padding: .3rem; display: inline-flex; gap: .2rem; border-bottom: none; margin-bottom: 1.25rem;
+    box-shadow: var(--shadow-sm);
+}
+.tabs a {
+    border-bottom: none; margin: 0; border-radius: 999px; padding: .55rem 1.15rem;
+}
+.tabs a.active, .tabs a:hover {
+    background: var(--primary); color: #fff; border-bottom-color: transparent;
+}
+.leaderboard-table tbody tr:hover { background: #f8fafc; }
+.leaderboard-table td strong { color: var(--navy); font-size: 1.05rem; }
+.card-flush { overflow: hidden; }
+
+/* ═══════════════════════════════════════════
+   Premium polish — icons, admin drawer, panels
+   ═══════════════════════════════════════════ */
+:root {
+    --font-display: 'Manrope', 'Inter', system-ui, sans-serif;
+}
+.icon {
+    width: 1.15em; height: 1.15em; display: inline-block; vertical-align: -0.18em;
+    flex-shrink: 0;
+}
+.icon-sm { width: 1em; height: 1em; vertical-align: -0.12em; }
+.icon-lg { width: 1.45em; height: 1.45em; }
+.icon-xl { width: 1.85em; height: 1.85em; }
+.icon-2xl { width: 2.75rem; height: 2.75rem; display: block; margin: 0 auto .5rem; color: var(--primary); opacity: .9; }
+.brand-icon .icon, .sidebar-logo .icon, .logo-mark .icon { color: #fff; width: 1.35rem; height: 1.35rem; vertical-align: 0; }
+.logo-mark .icon-xl { width: 1.65rem; height: 1.65rem; }
+.nav-ico { display: inline-flex; width: 1.35rem; justify-content: center; }
+.nav-ico .icon { color: inherit; }
+.empty-state-icon { font-size: inherit; display: grid; place-items: center; margin-bottom: .85rem; }
+.archive-champion-icon { color: var(--gold); display: inline-flex; }
+.bracket-champion-trophy { color: var(--gold); display: grid; place-items: center; margin-bottom: .35rem; }
+.bracket-pro-crown { color: var(--gold); display: inline-flex; }
+.motm-star, .motm-star-lg { color: var(--gold); display: inline-flex; }
+.player-motm-tag .icon { color: inherit; }
+.panel-goal-item {
+    display: flex; align-items: center; justify-content: space-between; gap: .5rem;
+    padding: .4rem .55rem; border-radius: 8px; background: var(--surface);
+    border: 1px solid var(--border); margin-bottom: .35rem;
+}
+.panel-goal-text { display: inline-flex; align-items: center; gap: .35rem; }
+
+h1, h2, .brand-text strong, .hero h1, .page-banner h1, .admin-topbar h1 {
+    font-family: var(--font-display);
+}
+.public-body {
+    background-image:
+        radial-gradient(ellipse 90% 55% at 50% -25%, rgba(4,120,87,.09), transparent 55%),
+        radial-gradient(ellipse 40% 30% at 100% 20%, rgba(29,78,216,.04), transparent),
+        linear-gradient(rgba(238,241,246,.55) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(238,241,246,.55) 1px, transparent 1px);
+    background-size: auto, auto, 56px 56px, 56px 56px;
+}
+.site-header {
+    background: rgba(255,255,255,.86);
+    backdrop-filter: blur(16px) saturate(1.2);
+}
+.hero {
+    background:
+        linear-gradient(135deg, rgba(255,255,255,.97) 0%, rgba(240,253,244,.9) 42%, rgba(239,246,255,.85) 100%);
+    border: 1px solid rgba(226,232,240,.9);
+}
+.card {
+    border-radius: var(--radius-xl);
+    box-shadow: 0 1px 2px rgba(15,23,42,.04), 0 8px 24px rgba(15,23,42,.04);
+}
+.section-header h2 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    letter-spacing: -.02em;
+}
+
+/* Admin topbar + drawer */
+.admin-topbar-left { display: flex; align-items: flex-start; gap: .75rem; }
+.admin-menu-btn, .admin-sidebar-close {
+    display: none; align-items: center; justify-content: center;
+    width: 42px; height: 42px; border-radius: 12px; border: 1px solid var(--border);
+    background: #fff; color: var(--navy); cursor: pointer; flex-shrink: 0;
+}
+.admin-menu-btn:hover, .admin-sidebar-close:hover { background: var(--surface-2); }
+.admin-sidebar-backdrop {
+    position: fixed; inset: 0; background: rgba(15,23,42,.45); z-index: 80;
+    backdrop-filter: blur(2px);
+}
+.admin-sidebar-close { position: absolute; top: 1rem; right: .75rem; background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.15); color: #fff; }
+.sidebar-brand { position: relative; display: flex; }
+.admin-panel-card h2 { margin: 0 0 .35rem; font-size: 1.15rem; color: var(--navy); }
+.admin-panel-head {
+    display: flex; gap: 1rem; align-items: flex-start; margin-bottom: 1.25rem;
+}
+.admin-panel-head p { margin: .25rem 0 0; color: var(--text-muted); font-size: .9rem; }
+.admin-panel-ico {
+    width: 48px; height: 48px; border-radius: 14px; flex-shrink: 0;
+    display: grid; place-items: center; color: var(--primary);
+    background: var(--primary-soft); border: 1px solid #a7f3d0;
+}
+.admin-subhead {
+    margin: 1.75rem 0 1rem; font-size: 1.05rem; color: var(--navy);
+    padding-top: 1rem; border-top: 1px solid var(--border);
+}
+.admin-section-title {
+    font-size: .78rem; font-weight: 800; text-transform: uppercase;
+    letter-spacing: .08em; color: var(--text-muted); margin: 1.5rem 0 .75rem;
+    display: flex; align-items: center; gap: .5rem;
+}
+.admin-quick-ico {
+    width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center;
+    background: var(--surface-2); color: var(--primary); margin-bottom: .75rem;
+    border: 1px solid var(--border);
+}
+.admin-quick-ico .icon { width: 1.35rem; height: 1.35rem; }
+.table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 -.25rem; }
+.table-scroll .data-table { min-width: 640px; }
+.admin-history-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem;
+}
+.admin-copy-row .btn { white-space: nowrap; }
+.danger-zone {
+    border-color: #fecaca;
+    background: linear-gradient(180deg, #fff 0%, #fef2f2 100%);
+}
+
+/* Override earlier mobile hide — drawer instead */
+@media (max-width: 960px) {
+    .admin-menu-btn { display: inline-flex; }
+    .admin-sidebar-close { display: inline-flex; }
+    .admin-shell { grid-template-columns: 1fr; position: relative; }
+    .admin-sidebar {
+        display: flex !important;
+        position: fixed; top: 0; left: 0; bottom: 0; width: min(300px, 88vw);
+        z-index: 90; transform: translateX(-105%);
+        transition: transform .28s cubic-bezier(.22,1,.36,1);
+        flex-direction: column !important; flex-wrap: nowrap !important;
+        padding: 1.25rem 1rem !important; overflow-y: auto;
+        box-shadow: 16px 0 48px rgba(15,23,42,.25);
+    }
+    .admin-shell.sidebar-open .admin-sidebar { transform: translateX(0); }
+    .sidebar-brand { border-bottom: 1px solid rgba(255,255,255,.1); margin-bottom: 1rem; padding-bottom: 1rem; width: 100%; }
+    .sidebar-nav {
+        flex-direction: column !important; flex-wrap: nowrap !important;
+        flex: 1 1 auto !important; gap: .2rem; width: 100%;
+    }
+    .sidebar-nav a { padding: .75rem .9rem !important; font-size: .9rem !important; width: 100%; }
+    .sidebar-footer { display: flex !important; width: 100%; margin-top: auto; }
+    .admin-content { padding: 1rem .9rem 2.5rem !important; }
+    .admin-topbar h1 { font-size: 1.25rem; }
+    .admin-dash-hero { padding: 1.15rem; }
+    .admin-page-intro { align-items: flex-start; }
+    .admin-teams-grid { grid-template-columns: 1fr; }
+    .admin-matches-grid { grid-template-columns: 1fr; }
+    .admin-copy-row { flex-direction: column; }
+    .manage-link-input { width: 100%; }
+    .match-panel-layout { grid-template-columns: 1fr; }
+    .bracket-size-form { flex-direction: column; align-items: stretch; }
+    body.admin-nav-open { overflow: hidden; }
+}
+
+@media (min-width: 961px) {
+    .admin-sidebar-backdrop { display: none !important; }
+    .admin-sidebar-close { display: none !important; }
+    .admin-menu-btn { display: none !important; }
+}
+
+@media (max-width: 640px) {
+    .stats-grid { width: 100%; }
+    .stat-card { flex: 1 1 calc(50% - .5rem); min-width: 0; }
+    .admin-quick-grid { grid-template-columns: 1fr; }
+    .portal-hero { padding: 1.25rem; }
+    .user-badge { max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+}
+

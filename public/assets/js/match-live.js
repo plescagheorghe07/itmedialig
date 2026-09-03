@@ -8,6 +8,9 @@
     const timeline = document.getElementById('goals-timeline');
     const connBadge = document.getElementById('ws-conn-badge');
 
+    const ICO_BALL = '<svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a12 12 0 0 1 0 18M12 3a12 12 0 0 0 0 18M3 12h18M5.5 6.5l13 11M5.5 17.5l13-11"/></svg>';
+    const ICO_STAR = '<svg class="icon icon-sm motm-star-svg" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><path d="M12 3.5 14.5 9l6 .5-4.6 4 1.4 5.8L12 16.5 6.7 19.3 8.1 13.5 3.5 9.5 9.5 9z"/></svg>';
+
     function escapeHtml(s) {
         const d = document.createElement('div');
         d.textContent = s;
@@ -25,7 +28,7 @@
             const name = g.player_name || ((g.prenume || '') + ' ' + (g.nume || '')).trim() || 'Jucător necunoscut';
             const team = g.team_nume || '';
             return `<div class="goal-event ${isHome ? 'team-home' : 'team-away'}" data-goal-id="${g.id}">
-                <span class="goal-minute">${g.minute ? g.minute + "'" : '⚽'}</span>
+                <span class="goal-minute">${g.minute ? g.minute + "'" : ICO_BALL}</span>
                 <div class="goal-body"><strong>${escapeHtml(name)}</strong><span class="text-muted">${escapeHtml(team)}</span></div>
             </div>`;
         }).join('');
@@ -36,10 +39,10 @@
         if (!box) return;
         const parts = [];
         if (motm1) {
-            parts.push(`<div class="motm-card"><span class="motm-star">★</span><img src="${escapeHtml(motm1.photo || motm1.poza_path || '')}" alt=""><strong>${escapeHtml(motm1.name)}</strong><small>Echipa gazdă</small></div>`);
+            parts.push(`<div class="motm-card"><span class="motm-star">${ICO_STAR}</span><img src="${escapeHtml(motm1.photo || motm1.poza_path || '')}" alt=""><strong>${escapeHtml(motm1.name)}</strong><small>Echipa gazdă</small></div>`);
         }
         if (motm2) {
-            parts.push(`<div class="motm-card"><span class="motm-star">★</span><img src="${escapeHtml(motm2.photo || motm2.poza_path || '')}" alt=""><strong>${escapeHtml(motm2.name)}</strong><small>Echipa oaspete</small></div>`);
+            parts.push(`<div class="motm-card"><span class="motm-star">${ICO_STAR}</span><img src="${escapeHtml(motm2.photo || motm2.poza_path || '')}" alt=""><strong>${escapeHtml(motm2.name)}</strong><small>Echipa oaspete</small></div>`);
         }
         box.innerHTML = parts.length ? parts.join('') : '<p class="text-muted">Oamenii meciului vor fi anunțați după terminare.</p>';
         box.style.display = parts.length ? '' : '';

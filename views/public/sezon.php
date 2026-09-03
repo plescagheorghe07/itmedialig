@@ -19,7 +19,7 @@ include __DIR__ . '/../partials/page_banner.php';
 
 <?php if (!empty($leaderboard[0])): ?>
 <div class="archive-champion card">
-    <span class="archive-champion-icon">🏆</span>
+    <span class="archive-champion-icon"><?= icon('trophy', 'icon icon-xl') ?></span>
     <div>
         <small>Campioană sezon</small>
         <strong><?= e($leaderboard[0]['nume']) ?></strong>

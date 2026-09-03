@@ -19,7 +19,7 @@ if (!empty($tree['rounds'])) {
 
 <?php if (empty($tree['rounds'])): ?>
 <div class="empty-state card">
-    <div class="empty-state-icon">🏆</div>
+    <div class="empty-state-icon"><?= icon('trophy', 'icon icon-2xl') ?></div>
     <h3>Bracket neconfigurat</h3>
     <p class="text-muted">Faza eliminatorie va fi afișată aici după configurarea din panoul admin.</p>
 </div>
@@ -52,7 +52,7 @@ if (!empty($tree['rounds'])) {
                                 <?php if ($t['score'] !== null): ?>
                                     <span class="bracket-pro-score"><?= (int) $t['score'] ?></span>
                                 <?php endif; ?>
-                                <?php if ($isWinner): ?><span class="bracket-pro-crown" title="Câștigător">👑</span><?php endif; ?>
+                                <?php if ($isWinner): ?><span class="bracket-pro-crown" title="Câștigător"><?= icon('star', 'icon icon-sm') ?></span><?php endif; ?>
                             <?php else: ?>
                                 <span class="bracket-pro-tbd">De stabilit</span>
                             <?php endif; ?>
@@ -68,7 +68,7 @@ if (!empty($tree['rounds'])) {
             <div class="bracket-pro-round bracket-pro-champion">
                 <div class="bracket-pro-round-head">Campioană</div>
                 <div class="bracket-champion-card">
-                    <span class="bracket-champion-trophy">🏆</span>
+                    <span class="bracket-champion-trophy"><?= icon('trophy', 'icon icon-2xl') ?></span>
                     <img src="<?= upload_url($finalWinner['logo'], 'team') ?>" alt="" class="team-logo">
                     <strong><?= e($finalWinner['name']) ?></strong>
                 </div>

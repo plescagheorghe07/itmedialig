@@ -1,7 +1,11 @@
-<div class="page-actions">
-    <button type="button" class="btn btn-primary" onclick="document.getElementById('historyModal').showModal()">+ Postare nouă</button>
+<div class="admin-page-intro">
+    <div>
+        <p class="admin-eyebrow">Conținut</p>
+        <p class="text-muted">Publică momente și galerii pentru pagina de istoric.</p>
+    </div>
+    <button type="button" class="btn btn-primary" onclick="document.getElementById('historyModal').showModal()"><?= icon('plus', 'icon icon-sm') ?> Postare nouă</button>
 </div>
-<div class="history-list">
+<div class="history-list admin-history-grid">
     <?php foreach ($posts as $post): ?>
     <div class="card history-admin-card">
         <h3><?= e($post['titlu']) ?></h3>
@@ -20,6 +24,13 @@
         </form>
     </div>
     <?php endforeach; ?>
+    <?php if (empty($posts)): ?>
+    <div class="empty-state card">
+        <div class="empty-state-icon"><?= icon('news', 'icon icon-2xl') ?></div>
+        <h3>Nicio postare</h3>
+        <p class="text-muted">Adaugă prima postare din istoric.</p>
+    </div>
+    <?php endif; ?>
 </div>
 
 <dialog id="historyModal" class="modal">

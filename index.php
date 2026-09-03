@@ -6,6 +6,7 @@ use App\App;
 use App\Controllers\AdminController;
 use App\Controllers\ApiController;
 use App\Controllers\PublicController;
+use App\Controllers\TeamPortalController;
 use App\Core\Router;
 use App\Core\Session;
 use App\Core\View;
@@ -36,6 +37,13 @@ $router->get('/istoric', [PublicController::class, 'istoric']);
 $router->get('/sezoane', [PublicController::class, 'sezoane']);
 $router->get('/sezoane/{id}', [PublicController::class, 'sezon']);
 
+// Portal auto-administrare echipă (link securizat, fără login admin)
+$router->get('/gestiune/{token}', [TeamPortalController::class, 'show']);
+$router->post('/gestiune/{token}', [TeamPortalController::class, 'updateTeam']);
+$router->post('/gestiune/{token}/jucatori', [TeamPortalController::class, 'storePlayer']);
+$router->post('/gestiune/{token}/jucatori/{playerId}', [TeamPortalController::class, 'updatePlayer']);
+$router->post('/gestiune/{token}/jucatori/{playerId}/delete', [TeamPortalController::class, 'deletePlayer']);
+
 // API (compatibil cu trofeu-hub-serverside)
 $router->post('/api/command', [ApiController::class, 'command']);
 $router->get('/api/live', [ApiController::class, 'live']);
@@ -51,6 +59,8 @@ $router->get('/admin/echipe', [AdminController::class, 'teams']);
 $router->post('/admin/echipe', [AdminController::class, 'teamStore']);
 $router->post('/admin/echipe/{id}', [AdminController::class, 'teamUpdate']);
 $router->post('/admin/echipe/{id}/delete', [AdminController::class, 'teamDelete']);
+$router->post('/admin/echipe/{id}/link', [AdminController::class, 'teamEnsureLink']);
+$router->post('/admin/echipe/{id}/link/regenerate', [AdminController::class, 'teamRegenerateLink']);
 
 $router->get('/admin/jucatori', [AdminController::class, 'players']);
 $router->post('/admin/jucatori', [AdminController::class, 'playerStore']);

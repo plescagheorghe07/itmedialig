@@ -7,7 +7,7 @@
     <title><?= e($title ?? 'Acasă') ?> — <?= e($settings['tournament_name'] ?? $appName ?? 'Trofeu Hub') ?></title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<?= asset('css/app.css') ?>">
     <script>window.TROFEU_WS_URL = <?= json_encode(ws_url()) ?>;</script>
 </head>
@@ -15,7 +15,7 @@
     <header class="site-header">
         <div class="container header-inner">
             <a href="<?= url('/') ?>" class="brand">
-                <span class="brand-icon" aria-hidden="true">⚽</span>
+                <span class="brand-icon" aria-hidden="true"><?= icon('ball', 'icon icon-lg') ?></span>
                 <span class="brand-text">
                     <strong><?= e($settings['tournament_name'] ?? 'Trofeu Hub') ?></strong>
                     <small>Sezon <?= e($settings['season'] ?? '') ?> · Turneu oficial</small>
@@ -61,8 +61,9 @@
                 <a href="<?= url('/sezoane') ?>">Sezoane anterioare</a>
             </div>
             <div class="footer-meta">
-                <strong>Sezon <?= e($settings['season'] ?? '') ?></strong>
-                <p>&copy; <?= date('Y') ?> <?= e($settings['tournament_name'] ?? 'Trofeu Hub') ?></p>
+                <strong>IT Media Lig</strong>
+                <p>&copy; 2025 · Realizat de Plesca Gheorghe (P-2343)</p>
+                <a href="https://visio.md/" target="_blank" rel="noopener">visio.md</a>
             </div>
         </div>
     </footer>

@@ -22,7 +22,7 @@
                     <?php if ($p['numar_tricou']): ?><span class="jersey-badge">#<?= (int) $p['numar_tricou'] ?></span><?php endif; ?>
                     <?php if ($p['pozitie']): ?><small class="text-muted"><?= e($p['pozitie']) ?></small><?php endif; ?>
                     <?php if ($p['man_of_the_match'] > 0): ?>
-                        <span class="player-motm-tag">★ OM ×<?= (int) $p['man_of_the_match'] ?></span>
+                        <span class="player-motm-tag"><?= icon('star', 'icon icon-sm') ?> OM ×<?= (int) $p['man_of_the_match'] ?></span>
                     <?php endif; ?>
                 </div>
             </div>

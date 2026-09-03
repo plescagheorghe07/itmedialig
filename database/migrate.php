@@ -13,7 +13,7 @@ $dbConfig = config('database');
 $driver = $dbConfig['driver'] ?? 'mysql';
 $pdo = Database::getInstance($dbConfig);
 
-foreach (['migration_v2', 'migration_v3', 'migration_v4'] as $name) {
+foreach (['migration_v2', 'migration_v3', 'migration_v4', 'migration_v5'] as $name) {
     $file = DbHelper::schemaFile($driver, $name);
     if (!is_file($file)) {
         echo "Skip: {$file}\n";

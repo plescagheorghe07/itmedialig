@@ -41,7 +41,7 @@ $motm2 = $live['motm2'] ?? null;
                     $isHome = $g['team_id'] === $m['echipa1_id'];
                 ?>
                 <div class="goal-event <?= $isHome ? 'team-home' : 'team-away' ?>" data-goal-id="<?= e($g['id']) ?>">
-                    <span class="goal-minute"><?= $g['minute'] ? e($g['minute']) . "'" : '⚽' ?></span>
+                    <span class="goal-minute"><?= $g['minute'] ? e($g['minute']) . "'" : icon('ball', 'icon icon-sm') ?></span>
                     <div class="goal-body">
                         <strong><?= e($g['player_name'] ?: 'Jucător necunoscut') ?></strong>
                         <span class="text-muted"><?= e($g['team_nume']) ?></span>
@@ -60,7 +60,7 @@ $motm2 = $live['motm2'] ?? null;
                 <?php if ($motm1 || $motm2): ?>
                     <?php if ($motm1): ?>
                     <div class="motm-card">
-                        <span class="motm-star">★</span>
+                        <span class="motm-star"><?= icon('star', 'icon icon-sm') ?></span>
                         <img src="<?= upload_url($motm1['poza_path'] ?? null, 'player') ?>" alt="">
                         <strong><?= e($motm1['name']) ?></strong>
                         <small><?= e($m['echipa1_nume']) ?></small>
@@ -68,7 +68,7 @@ $motm2 = $live['motm2'] ?? null;
                     <?php endif; ?>
                     <?php if ($motm2): ?>
                     <div class="motm-card">
-                        <span class="motm-star">★</span>
+                        <span class="motm-star"><?= icon('star', 'icon icon-sm') ?></span>
                         <img src="<?= upload_url($motm2['poza_path'] ?? null, 'player') ?>" alt="">
                         <strong><?= e($motm2['name']) ?></strong>
                         <small><?= e($m['echipa2_nume']) ?></small>

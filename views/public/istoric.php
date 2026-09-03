@@ -26,7 +26,7 @@ include __DIR__ . '/../partials/page_banner.php';
     <?php endforeach; ?>
     <?php if (empty($posts)): ?>
         <div class="empty-state card">
-            <div class="empty-state-icon">📸</div>
+            <div class="empty-state-icon"><?= icon('news', 'icon icon-2xl') ?></div>
             <h3>Nicio postare încă</h3>
             <p class="text-muted">Istoricul turneului va fi publicat aici.</p>
         </div>

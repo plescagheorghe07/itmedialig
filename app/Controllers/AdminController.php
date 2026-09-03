@@ -110,6 +110,24 @@ class AdminController extends BaseController
         redirect('/admin/echipe');
     }
 
+    public function teamEnsureLink(string $id): void
+    {
+        $this->guardPost();
+        $this->app->teams()->ensureManageToken($id);
+        Session::flash('success', 'Link-ul de administrare este gata.');
+        Session::flash('manage_link_team', $id);
+        redirect('/admin/echipe');
+    }
+
+    public function teamRegenerateLink(string $id): void
+    {
+        $this->guardPost();
+        $this->app->teams()->regenerateManageToken($id);
+        Session::flash('success', 'Link regenerat. Link-ul vechi nu mai funcționează.');
+        Session::flash('manage_link_team', $id);
+        redirect('/admin/echipe');
+    }
+
     // --- JUCĂTORI ---
     public function players(): void
     {

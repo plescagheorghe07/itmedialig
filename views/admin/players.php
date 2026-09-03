@@ -1,7 +1,12 @@
-<div class="page-actions">
-    <button type="button" class="btn btn-primary" onclick="document.getElementById('playerModal').showModal()">+ Adaugă jucător</button>
+<div class="admin-page-intro">
+    <div>
+        <p class="admin-eyebrow">Loturi</p>
+        <p class="text-muted">Gestionează jucătorii și asocierile la echipe.</p>
+    </div>
+    <button type="button" class="btn btn-primary" onclick="document.getElementById('playerModal').showModal()"><?= icon('plus', 'icon icon-sm') ?> Adaugă jucător</button>
 </div>
-<div class="card">
+<div class="card card-flush">
+    <div class="table-scroll">
     <table class="data-table">
         <thead><tr><th>Foto</th><th>Nume</th><th>Echipă</th><th>#</th><th>Poziție</th><th>Acțiuni</th></tr></thead>
         <tbody>
@@ -23,6 +28,7 @@
             <?php endforeach; ?>
         </tbody>
     </table>
+    </div>
 </div>
 
 <dialog id="playerModal" class="modal">

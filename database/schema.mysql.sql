@@ -23,10 +23,13 @@ CREATE TABLE IF NOT EXISTS teams (
     logo_path VARCHAR(500) NULL,
     grupa VARCHAR(50) NOT NULL,
     is_active TINYINT(1) NOT NULL DEFAULT 1,
+    manage_token CHAR(64) NULL,
+    manage_token_created_at DATETIME NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_teams_grupa (grupa),
-    INDEX idx_teams_nume (nume)
+    INDEX idx_teams_nume (nume),
+    UNIQUE INDEX idx_teams_manage_token (manage_token)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS players (

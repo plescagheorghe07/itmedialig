@@ -1,7 +1,16 @@
-<div class="card">
+<div class="admin-page-intro">
+    <div>
+        <p class="admin-eyebrow">Configurare</p>
+        <p class="text-muted">Nume turneu, punctaj, Redis și WebSocket.</p>
+    </div>
+</div>
+<div class="card admin-panel-card">
     <form method="post" action="<?= url('/admin/setari') ?>" class="settings-form">
         <input type="hidden" name="_csrf" value="<?= e($csrf) ?>">
-        <h2>Turneu</h2>
+        <div class="admin-panel-head">
+            <span class="admin-panel-ico"><?= icon('settings', 'icon icon-lg') ?></span>
+            <div><h2>Turneu</h2></div>
+        </div>
         <label>Nume turneu <input type="text" name="tournament_name" value="<?= e($settings['tournament_name'] ?? '') ?>" required></label>
         <label>Sezon <input type="text" name="season" value="<?= e($settings['season'] ?? '') ?>"></label>
         <div class="form-row">
@@ -9,7 +18,7 @@
             <label>Puncte egal <input type="number" name="points_draw" value="<?= e($settings['points_draw'] ?? '1') ?>" min="0"></label>
         </div>
 
-        <h2 style="margin-top:1.5rem">Redis & Live</h2>
+        <h2 class="admin-subhead">Redis &amp; Live</h2>
         <label class="checkbox-label">
             <input type="checkbox" name="redis_enabled" <?= ($settings['redis_enabled'] ?? '0') === '1' ? 'checked' : '' ?>>
             Activează cache Redis pentru clasament

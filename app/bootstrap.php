@@ -169,6 +169,8 @@ function e(?string $value): string
     return htmlspecialchars($value ?? '', ENT_QUOTES, 'UTF-8');
 }
 
+require BASE_PATH . '/app/helpers_icons.php';
+
 function redirect(string $path): never
 {
     header('Location: ' . url($path));
