@@ -5,6 +5,9 @@
  * Pornire: php bin/websocket-server.php
  */
 
+// Ratchet/React pe PHP 8.4 emit E_DEPRECATED pe proprietăți dinamice — nu întrerupe handshake-ul
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
+
 require dirname(__DIR__) . '/app/bootstrap.php';
 
 if (is_file(dirname(__DIR__) . '/vendor/autoload.php')) {
