@@ -59,6 +59,7 @@ $router->get('/admin/echipe', [AdminController::class, 'teams']);
 $router->post('/admin/echipe', [AdminController::class, 'teamStore']);
 $router->post('/admin/echipe/{id}', [AdminController::class, 'teamUpdate']);
 $router->post('/admin/echipe/{id}/delete', [AdminController::class, 'teamDelete']);
+$router->post('/admin/echipe/{id}/activate', [AdminController::class, 'teamActivate']);
 $router->post('/admin/echipe/{id}/link', [AdminController::class, 'teamEnsureLink']);
 $router->post('/admin/echipe/{id}/link/regenerate', [AdminController::class, 'teamRegenerateLink']);
 

@@ -97,6 +97,11 @@ class Team extends BaseModel
         $this->db->prepare('UPDATE teams SET is_active = 0, updated_at = ' . $this->nowSql() . ' WHERE id = ?')->execute([$id]);
     }
 
+    public function activate(string $id): void
+    {
+        $this->db->prepare('UPDATE teams SET is_active = 1, updated_at = ' . $this->nowSql() . ' WHERE id = ?')->execute([$id]);
+    }
+
     public function hardDelete(string $id): void
     {
         $this->db->prepare('DELETE FROM teams WHERE id = ?')->execute([$id]);

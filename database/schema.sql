@@ -62,8 +62,9 @@ CREATE TABLE matches (
     omul_meciului_echipa2_id UNIQUEIDENTIFIER NULL REFERENCES players(id) ON DELETE SET NULL,
     live_link NVARCHAR(500) NULL,
     match_tag NVARCHAR(50) NULL DEFAULT 'nedefinit'
-        CHECK (match_tag IN ('nedefinit', 'grupa', 'optimi', 'sferturi', 'semi-finala', 'finala_mica', 'finala_mare')),
+        CHECK (match_tag IN ('nedefinit', 'grupa', 'saisprezecimi', 'optimi', 'sferturi', 'semi-finala', 'finala_mica', 'finala_mare')),
     locatie NVARCHAR(200) NULL,
+    exclude_from_standings BIT NOT NULL DEFAULT 0,
     created_at DATETIME2 NOT NULL DEFAULT GETDATE(),
     updated_at DATETIME2 NOT NULL DEFAULT GETDATE()
 );

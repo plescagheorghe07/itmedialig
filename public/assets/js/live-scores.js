@@ -2,7 +2,7 @@
  * Trofeu Hub — scoruri live via WebSocket (polling doar ca fallback)
  */
 (function () {
-    const statusLabels = { se_joaca: '● LIVE', terminat: 'Terminat', programat: 'Programat' };
+    const statusLabels = { se_joaca: 'LIVE', terminat: 'Terminat', programat: 'Programat' };
     const LIVE_TYPES = new Set([
         'match_update', 'goal_added', 'goal_removed',
         'match_started', 'match_finished', 'motm_updated', 'connected'
@@ -13,8 +13,8 @@
         const row = document.querySelector('[data-match-id="' + data.id + '"]');
         if (!row) return;
 
-        row.className = row.className.replace(/\bstatus-\S+/g, '').trim();
-        row.classList.add('match-row', 'match-card-pro', 'status-' + data.status);
+        row.classList.remove('status-se_joaca', 'status-programat', 'status-terminat', 'is-live');
+        row.classList.add('status-' + data.status);
         if (data.status === 'se_joaca') row.classList.add('is-live');
 
         const scoreEl = row.querySelector('[data-live-score]');
@@ -33,9 +33,14 @@
         }
         if (statusEl) {
             statusEl.className = 'status-badge status-' + data.status;
-            statusEl.textContent = statusLabels[data.status] || data.status;
+            if (data.status === 'se_joaca') {
+                statusEl.innerHTML = '<span class="live-dot"></span> LIVE';
+            } else {
+                statusEl.textContent = statusLabels[data.status] || data.status;
+            }
         }
         if (liveLink) {
+            if (data.live_link) liveLink.href = data.live_link;
             liveLink.style.display = data.status === 'se_joaca' && data.live_link ? '' : 'none';
         }
         if (watchBtn) {

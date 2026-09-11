@@ -52,4 +52,40 @@ class MatchGoal extends BaseModel
         $stmt->execute([$id]);
         return $stmt->fetch() ?: null;
     }
+
+    public function byPlayer(string $playerId): array
+    {
+        $mt = $this->matchesTable();
+        $stmt = $this->db->prepare(
+            "SELECT g.*, t.nume AS team_nume, m.data_meci, m.status,
+                    t1.nume AS echipa1_nume, t2.nume AS echipa2_nume
+             FROM match_goals g
+             JOIN teams t ON t.id = g.team_id
+             JOIN {$mt} m ON m.id = g.match_id
+             JOIN teams t1 ON t1.id = m.echipa1_id
+             JOIN teams t2 ON t2.id = m.echipa2_id
+             WHERE g.player_id = ?
+             ORDER BY m.data_meci DESC, g.minute ASC"
+        );
+        $stmt->execute([$playerId]);
+        return $stmt->fetchAll();
+    }
+
+    public function countByPlayerIds(array $playerIds): array
+    {
+        if ($playerIds === []) {
+            return [];
+        }
+        $placeholders = implode(',', array_fill(0, count($playerIds), '?'));
+        $stmt = $this->db->prepare(
+            "SELECT player_id, COUNT(*) AS goals FROM match_goals
+             WHERE player_id IN ({$placeholders}) GROUP BY player_id"
+        );
+        $stmt->execute(array_values($playerIds));
+        $map = [];
+        foreach ($stmt->fetchAll() as $row) {
+            $map[$row['player_id']] = (int) $row['goals'];
+        }
+        return $map;
+    }
 }

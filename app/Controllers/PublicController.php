@@ -70,31 +70,62 @@ class PublicController extends BaseController
     public function echipa(string $id): void
     {
         $team = $this->app->teams()->find($id);
-        if (!$team) {
+        if (!$team || empty($team['is_active'])) {
             http_response_code(404);
             View::render('public/404', ['title' => 'Echipă negăsită'], 'public');
             return;
         }
 
         $players = $this->app->players()->byTeam($id);
-        $matches = $this->app->matches()->byTeam($id);
+        $matches = $this->app->matches()->byTeamEnriched($id);
+        $playerIds = array_column($players, 'id');
+        $goalMap = $this->app->matchGoals()->countByPlayerIds($playerIds);
 
         $playerStats = [];
         foreach ($players as $player) {
             $motm = 0;
+            $goalsDetail = [];
             foreach ($matches as $match) {
                 if ($match['omul_meciului_echipa1_id'] === $player['id'] ||
                     $match['omul_meciului_echipa2_id'] === $player['id']) {
                     $motm++;
                 }
             }
-            $playerStats[] = array_merge($player, ['man_of_the_match' => $motm]);
+            try {
+                $goalsDetail = $this->app->matchGoals()->byPlayer($player['id']);
+            } catch (\Throwable) {
+                $goalsDetail = [];
+            }
+            $playerStats[] = array_merge($player, [
+                'man_of_the_match' => $motm,
+                'goals' => $goalMap[$player['id']] ?? 0,
+                'goals_detail' => $goalsDetail,
+            ]);
+        }
+
+        usort($playerStats, fn($a, $b) => [$b['goals'], $b['man_of_the_match'], $a['prenume']] <=> [$a['goals'], $a['man_of_the_match'], $b['prenume']]);
+
+        $record = ['w' => 0, 'd' => 0, 'l' => 0, 'gf' => 0, 'ga' => 0];
+        foreach ($matches as $match) {
+            if ($match['status'] !== 'terminat' || !empty($match['exclude_from_standings'])) {
+                continue;
+            }
+            $isHome = $match['echipa1_id'] === $id;
+            $scored = (int) ($isHome ? $match['scor_echipa1'] : $match['scor_echipa2']);
+            $conceded = (int) ($isHome ? $match['scor_echipa2'] : $match['scor_echipa1']);
+            $record['gf'] += $scored;
+            $record['ga'] += $conceded;
+            if ($scored > $conceded) $record['w']++;
+            elseif ($scored === $conceded) $record['d']++;
+            else $record['l']++;
         }
 
         View::render('public/echipa', [
             'title' => $team['nume'],
             'team' => $team,
             'players' => $playerStats,
+            'matches' => $matches,
+            'record' => $record,
             'settings' => $this->settings(),
         ], 'public');
     }

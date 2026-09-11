@@ -72,7 +72,7 @@ $finished = array_filter($matches, fn($m) => $m['status'] === 'terminat');
         <div class="form-row">
             <label>Tag meci
                 <select name="match_tag">
-                    <?php foreach (['nedefinit','grupa','optimi','sferturi','semi-finala','finala_mica','finala_mare'] as $tag): ?>
+                    <?php foreach (['nedefinit','grupa','saisprezecimi','optimi','sferturi','semi-finala','finala_mica','finala_mare'] as $tag): ?>
                         <option value="<?= $tag ?>"><?= $tag ?></option>
                     <?php endforeach; ?>
                 </select>
@@ -80,6 +80,11 @@ $finished = array_filter($matches, fn($m) => $m['status'] === 'terminat');
             <label>Locație <input type="text" name="locatie"></label>
         </div>
         <label>Link live <input type="url" name="live_link" placeholder="https://..."></label>
+        <label class="checkbox-label">
+            <input type="checkbox" name="exclude_from_standings" id="exclude_from_standings" value="1">
+            Nu actualiza clasamentul
+        </label>
+        <p class="hint text-muted">Bifează pentru meciuri amicale sau demonstrative care nu modifică punctajul.</p>
         <p class="hint text-muted">Oamenii meciului se setează din panoul meciului, după terminare.</p>
         <div class="modal-actions">
             <button type="button" class="btn btn-ghost" onclick="this.closest('dialog').close()">Anulează</button>
@@ -99,6 +104,7 @@ function editMatch(m) {
     form.match_tag.value = m.match_tag || 'nedefinit';
     form.locatie.value = m.locatie || '';
     form.live_link.value = m.live_link || '';
+    form.exclude_from_standings.checked = !!(m.exclude_from_standings == 1 || m.exclude_from_standings === true || m.exclude_from_standings === '1');
     if (m.data_meci) form.data_meci.value = m.data_meci.replace(' ', 'T').slice(0, 16);
     document.getElementById('matchModalTitle').textContent = 'Editează meci';
     document.getElementById('matchModal').showModal();

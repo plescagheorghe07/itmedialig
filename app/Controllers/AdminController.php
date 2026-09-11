@@ -106,7 +106,17 @@ class AdminController extends BaseController
     {
         $this->guardPost();
         $this->app->teams()->delete($id);
+        $this->app->leaderboard()->invalidateCache();
         Session::flash('success', 'Echipa a fost dezactivată.');
+        redirect('/admin/echipe');
+    }
+
+    public function teamActivate(string $id): void
+    {
+        $this->guardPost();
+        $this->app->teams()->activate($id);
+        $this->app->leaderboard()->invalidateCache();
+        Session::flash('success', 'Echipa a fost reactivată.');
         redirect('/admin/echipe');
     }
 
@@ -339,11 +349,21 @@ class AdminController extends BaseController
     {
         $this->guardPost();
         $resetTeams = isset($_POST['reset_teams']);
+        $resetPlayers = isset($_POST['reset_players']);
+        $resetMatches = isset($_POST['reset_matches']);
+        $resetBracket = isset($_POST['reset_bracket']);
         $newSeason = trim($_POST['new_season'] ?? '') ?: null;
         $adminId = $this->app->auth()->user()['id'];
 
         try {
-            $archiveId = $this->app->seasonArchive()->archiveCurrent($adminId, $resetTeams, $newSeason);
+            $archiveId = $this->app->seasonArchive()->archiveCurrent(
+                $adminId,
+                $resetTeams,
+                $resetPlayers,
+                $resetMatches,
+                $resetBracket,
+                $newSeason
+            );
             Session::flash('success', 'Sezonul curent a fost arhivat. Sezon nou activ.');
         } catch (\Throwable $e) {
             Session::flash('error', 'Eroare arhivare: ' . $e->getMessage());
@@ -491,6 +511,7 @@ class AdminController extends BaseController
             'live_link' => trim($_POST['live_link'] ?? '') ?: null,
             'match_tag' => $_POST['match_tag'] ?? 'nedefinit',
             'locatie' => trim($_POST['locatie'] ?? '') ?: null,
+            'exclude_from_standings' => isset($_POST['exclude_from_standings']) ? 1 : 0,
         ];
     }
 

@@ -10,7 +10,7 @@
         <span class="admin-panel-ico"><?= icon('archive', 'icon icon-lg') ?></span>
         <div>
             <h2>Arhivează sezonul curent</h2>
-            <p>Salvează un snapshot complet (echipe, jucători, meciuri, clasament, bracket, istoric) și pornește un sezon nou. Meciurile, bracket-ul și istoricul curent vor fi șterse.</p>
+            <p>Salvează un snapshot complet (echipe, jucători, goluri, meciuri, clasament, bracket, istoric) și pornește un sezon nou. Istoricul se șterge mereu; restul este opțional mai jos.</p>
         </div>
     </div>
     <form method="post" action="<?= url('/admin/sezoane/arhiveaza') ?>" onsubmit="return confirm('Sigur arhivezi sezonul <?= e($settings['season'] ?? '') ?>? Această acțiune nu poate fi anulată.')">
@@ -20,7 +20,16 @@
                 <input type="text" name="new_season" placeholder="ex: 2026-2027">
             </label>
             <label class="checkbox-label">
-                <input type="checkbox" name="reset_teams"> Șterge și echipele/jucătorii
+                <input type="checkbox" name="reset_matches" checked> Șterge meciuri
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox" name="reset_bracket" checked> Șterge bracket
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox" name="reset_players"> Șterge jucătorii
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox" name="reset_teams"> Șterge echipe
             </label>
         </div>
         <button type="submit" class="btn btn-danger"><?= icon('archive', 'icon icon-sm') ?> Arhivează sezonul curent</button>

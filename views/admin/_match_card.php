@@ -22,6 +22,9 @@
         </div>
     </div>
     <?php if ($m['locatie']): ?><p class="admin-match-venue text-muted"><?= e($m['locatie']) ?></p><?php endif; ?>
+    <?php if (!empty($m['exclude_from_standings'])): ?>
+        <p class="admin-match-venue"><span class="match-tag match-tag-friendly">Fără clasament</span></p>
+    <?php endif; ?>
     <div class="admin-match-actions">
         <a href="<?= url('/admin/meciuri/' . $m['id'] . '/panou') ?>" class="btn btn-sm btn-primary">
             <?= $m['status'] === 'programat' ? icon('play', 'icon icon-sm') . ' Începe' : 'Panou' ?>

@@ -1,8 +1,9 @@
-<table class="leaderboard-table">
+<div class="table-scroll table-scroll-sticky">
+<table class="leaderboard-table sticky-cols">
     <thead>
         <tr>
-            <th>#</th>
-            <th>Echipă</th>
+            <th class="col-rank">#</th>
+            <th class="col-name">Echipă</th>
             <th>MJ</th>
             <th>V</th>
             <th>E</th>
@@ -16,8 +17,8 @@
     <tbody>
         <?php foreach ($leaderboard as $i => $row): ?>
             <tr>
-                <td class="rank"><?= $i + 1 ?></td>
-                <td class="team-cell text-left">
+                <td class="rank col-rank"><?= $i + 1 ?></td>
+                <td class="team-cell text-left col-name">
                     <div class="team-cell-inner">
                         <img src="<?= upload_url($row['logo_url'] ?? null, 'team') ?>" alt="" class="team-logo-xs">
                         <div>
@@ -41,3 +42,4 @@
         <?php endif; ?>
     </tbody>
 </table>
+</div>

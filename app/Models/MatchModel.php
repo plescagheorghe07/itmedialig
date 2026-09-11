@@ -55,23 +55,37 @@ class MatchModel extends BaseModel
         )->fetchAll();
     }
 
+    /** @deprecated Use byTeamEnriched for full match history */
     public function byTeam(string $teamId): array
+    {
+        return $this->byTeamEnriched($teamId);
+    }
+
+    public function byTeamEnriched(string $teamId): array
     {
         $mt = $this->matchesTable();
         $stmt = $this->db->prepare(
-            "SELECT omul_meciului_echipa1_id, omul_meciului_echipa2_id, echipa1_id, echipa2_id
-             FROM {$mt} WHERE echipa1_id = ? OR echipa2_id = ?"
+            "SELECT m.*,
+                t1.nume AS echipa1_nume, t1.logo_path AS echipa1_logo,
+                t2.nume AS echipa2_nume, t2.logo_path AS echipa2_logo
+             FROM {$mt} m
+             JOIN teams t1 ON t1.id = m.echipa1_id
+             JOIN teams t2 ON t2.id = m.echipa2_id
+             WHERE m.echipa1_id = ? OR m.echipa2_id = ?
+             ORDER BY m.data_meci DESC"
         );
         $stmt->execute([$teamId, $teamId]);
         return $stmt->fetchAll();
     }
 
-    public function finished(): array
+    public function finished(bool $forStandings = true): array
     {
         $mt = $this->matchesTable();
-        return $this->db->query(
-            "SELECT * FROM {$mt} WHERE status = 'terminat'"
-        )->fetchAll();
+        $sql = "SELECT * FROM {$mt} WHERE status = 'terminat'";
+        if ($forStandings) {
+            $sql .= ' AND COALESCE(exclude_from_standings, 0) = 0';
+        }
+        return $this->db->query($sql)->fetchAll();
     }
 
     public function create(array $data): string
@@ -80,8 +94,8 @@ class MatchModel extends BaseModel
         $id = $this->newUuid();
         $stmt = $this->db->prepare(
             "INSERT INTO {$mt} (id, echipa1_id, echipa2_id, scor_echipa1, scor_echipa2, status,
-             data_meci, omul_meciului_echipa1_id, omul_meciului_echipa2_id, live_link, match_tag, locatie)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+             data_meci, omul_meciului_echipa1_id, omul_meciului_echipa2_id, live_link, match_tag, locatie, exclude_from_standings)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         );
         $stmt->execute([
             $id,
@@ -96,6 +110,7 @@ class MatchModel extends BaseModel
             $data['live_link'] ?? null,
             $data['match_tag'] ?? 'nedefinit',
             $data['locatie'] ?? null,
+            !empty($data['exclude_from_standings']) ? 1 : 0,
         ]);
         return $id;
     }
@@ -106,7 +121,8 @@ class MatchModel extends BaseModel
         $stmt = $this->db->prepare(
             "UPDATE {$mt} SET echipa1_id = ?, echipa2_id = ?, scor_echipa1 = ?, scor_echipa2 = ?,
              status = ?, data_meci = ?, omul_meciului_echipa1_id = ?, omul_meciului_echipa2_id = ?,
-             live_link = ?, match_tag = ?, locatie = ?, updated_at = " . $this->nowSql() . ' WHERE id = ?'
+             live_link = ?, match_tag = ?, locatie = ?, exclude_from_standings = ?,
+             updated_at = " . $this->nowSql() . ' WHERE id = ?'
         );
         $stmt->execute([
             $data['echipa1_id'],
@@ -120,6 +136,7 @@ class MatchModel extends BaseModel
             $data['live_link'] ?? null,
             $data['match_tag'] ?? 'nedefinit',
             $data['locatie'] ?? null,
+            !empty($data['exclude_from_standings']) ? 1 : 0,
             $id,
         ]);
     }

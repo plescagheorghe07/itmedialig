@@ -54,10 +54,17 @@ $highlightId = \App\Core\Session::flash('manage_link_team');
                 <button type="submit" class="btn btn-sm btn-ghost">Regenerează link</button>
             </form>
             <?php endif; ?>
+            <?php if ($active): ?>
             <form method="post" action="<?= url('/admin/echipe/' . $t['id'] . '/delete') ?>" onsubmit="return confirm('Dezactivezi echipa?')">
                 <input type="hidden" name="_csrf" value="<?= e($csrf) ?>">
-                <button type="submit" class="btn btn-sm btn-danger">Șterge</button>
+                <button type="submit" class="btn btn-sm btn-danger">Dezactivează</button>
             </form>
+            <?php else: ?>
+            <form method="post" action="<?= url('/admin/echipe/' . $t['id'] . '/activate') ?>">
+                <input type="hidden" name="_csrf" value="<?= e($csrf) ?>">
+                <button type="submit" class="btn btn-sm btn-primary">Reactivează</button>
+            </form>
+            <?php endif; ?>
         </div>
     </article>
     <?php endforeach; ?>

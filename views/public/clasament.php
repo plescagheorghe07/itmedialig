@@ -22,12 +22,13 @@ include __DIR__ . '/../partials/page_banner.php';
 </div>
 
 <?php if (($activeTab ?? 'echipe') === 'jucatori'): ?>
-<div class="card" style="padding:0; overflow:hidden">
-    <table class="leaderboard-table">
+<div class="card card-flush">
+    <div class="table-scroll table-scroll-sticky">
+    <table class="leaderboard-table sticky-cols sticky-cols-player">
         <thead>
             <tr>
-                <th>#</th>
-                <th class="text-left">Jucător</th>
+                <th class="col-rank">#</th>
+                <th class="col-name text-left">Jucător</th>
                 <th class="text-left">Echipă</th>
                 <th>Grupa</th>
                 <th>Goluri</th>
@@ -37,8 +38,8 @@ include __DIR__ . '/../partials/page_banner.php';
         <tbody>
             <?php foreach ($playerStats as $i => $p): ?>
             <tr>
-                <td class="rank"><?= $i + 1 ?></td>
-                <td class="text-left">
+                <td class="rank col-rank"><?= $i + 1 ?></td>
+                <td class="text-left col-name">
                     <div class="team-cell-inner">
                         <img src="<?= upload_url($p['poza_path'], 'player') ?>" class="player-photo-sm" alt="">
                         <span><?= e($p['prenume'] . ' ' . $p['nume']) ?></span>
@@ -55,6 +56,7 @@ include __DIR__ . '/../partials/page_banner.php';
             <?php endif; ?>
         </tbody>
     </table>
+    </div>
 </div>
 <?php else: ?>
 <div class="card card-flush">

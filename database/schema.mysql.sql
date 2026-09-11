@@ -60,6 +60,7 @@ CREATE TABLE IF NOT EXISTS `matches` (
     live_link VARCHAR(500) NULL,
     match_tag VARCHAR(50) NULL DEFAULT 'nedefinit',
     locatie VARCHAR(200) NULL,
+    exclude_from_standings TINYINT(1) NOT NULL DEFAULT 0,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_matches_data (data_meci),
@@ -71,7 +72,7 @@ CREATE TABLE IF NOT EXISTS `matches` (
     CONSTRAINT fk_matches_om1 FOREIGN KEY (omul_meciului_echipa1_id) REFERENCES players(id) ON DELETE SET NULL,
     CONSTRAINT fk_matches_om2 FOREIGN KEY (omul_meciului_echipa2_id) REFERENCES players(id) ON DELETE SET NULL,
     CONSTRAINT chk_matches_status CHECK (status IN ('programat', 'se_joaca', 'terminat')),
-    CONSTRAINT chk_matches_tag CHECK (match_tag IN ('nedefinit', 'grupa', 'optimi', 'sferturi', 'semi-finala', 'finala_mica', 'finala_mare'))
+    CONSTRAINT chk_matches_tag CHECK (match_tag IN ('nedefinit', 'grupa', 'saisprezecimi', 'optimi', 'sferturi', 'semi-finala', 'finala_mica', 'finala_mare'))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS bracket (

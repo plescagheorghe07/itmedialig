@@ -36,7 +36,7 @@ class LeaderboardService
             $teams = array_filter($teams, fn($t) => $t['grupa'] === $grupa);
         }
 
-        $finished = $this->matches->finished();
+        $finished = $this->matches->finished(true);
         $playerCounts = $this->playerCountByTeam();
         $pointsWin = (int) ($this->settings->get('points_win', '3') ?: 3);
         $pointsDraw = (int) ($this->settings->get('points_draw', '1') ?: 1);
@@ -60,6 +60,9 @@ class LeaderboardService
             ];
 
             foreach ($finished as $match) {
+                if (!empty($match['exclude_from_standings'])) {
+                    continue;
+                }
                 if ($match['echipa1_id'] !== $team['id'] && $match['echipa2_id'] !== $team['id']) {
                     continue;
                 }

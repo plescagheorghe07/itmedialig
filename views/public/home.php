@@ -55,7 +55,9 @@
         <h2>Top clasament</h2>
         <a href="<?= url('/clasament') ?>" class="link-more">Vezi tot →</a>
     </div>
-    <?php include __DIR__ . '/../partials/leaderboard_table.php'; ?>
+    <div class="card card-flush">
+        <?php include __DIR__ . '/../partials/leaderboard_table.php'; ?>
+    </div>
 </section>
 
 <?php if (!empty($upcoming)): ?>
