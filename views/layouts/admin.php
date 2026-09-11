@@ -28,7 +28,7 @@
                 ['/admin/echipe', 'Echipe', 'shield', str_contains($uri, '/echipe')],
                 ['/admin/jucatori', 'Jucători', 'user', str_contains($uri, '/jucatori')],
                 ['/admin/meciuri', 'Meciuri', 'ball', str_contains($uri, '/meciuri')],
-                ['/admin/bracket', 'Bracket', 'tree', str_contains($uri, '/bracket')],
+                ['/admin/bracket', 'PLAY-OFF', 'tree', str_contains($uri, '/bracket')],
                 ['/admin/istoric', 'Istoric', 'news', str_contains($uri, '/istoric')],
                 ['/admin/sezoane', 'Sezoane', 'calendar', str_contains($uri, '/sezoane')],
                 ['/admin/exporturi', 'Export PDF', 'file', str_contains($uri, '/exporturi')],

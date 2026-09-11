@@ -31,7 +31,7 @@ include __DIR__ . '/../partials/page_banner.php';
                 <th class="text-left">Echipă</th>
                 <th>Grupa</th>
                 <th>Goluri</th>
-                <th>MOTM</th>
+                <th>MVP</th>
             </tr>
         </thead>
         <tbody>

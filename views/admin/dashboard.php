@@ -30,7 +30,7 @@
     </a>
     <a href="<?= url('/admin/bracket') ?>" class="admin-quick-card card">
         <span class="admin-quick-ico"><?= icon('tree', 'icon icon-lg') ?></span>
-        <strong>Bracket</strong>
+        <strong>PLAY-OFF</strong>
         <p>Configurează faza eliminatorie vizual.</p>
     </a>
     <a href="<?= url('/admin/setari') ?>" class="admin-quick-card card">

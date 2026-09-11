@@ -31,7 +31,7 @@
                 ['/clasament', 'Clasament', str_contains($path, 'clasament')],
                 ['/meciuri', 'Meciuri', str_contains($path, 'meci')],
                 ['/echipe', 'Echipe', str_contains($path, 'echip')],
-                ['/bracket', 'Bracket', str_contains($path, 'bracket') || str_contains($path, 'eliminatoare')],
+                ['/bracket', 'PLAY-OFF', str_contains($path, 'bracket') || str_contains($path, 'eliminatoare')],
                 ['/istoric', 'Istoric', str_contains($path, 'istoric')],
                 ['/sezoane', 'Sezoane', str_contains($path, 'sezoane')],
             ];

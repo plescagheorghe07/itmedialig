@@ -1,6 +1,6 @@
 <?php
 $tree = $bracketTree;
-$bannerTitle = 'Bracket eliminatoriu';
+$bannerTitle = 'PLAY-OFF';
 $bannerSubtitle = 'Faza eliminatorie · ' . (int) $tree['size'] . ' echipe';
 $bannerBadge = 'Playoff';
 include __DIR__ . '/../partials/page_banner.php';
@@ -20,7 +20,7 @@ if (!empty($tree['rounds'])) {
 <?php if (empty($tree['rounds'])): ?>
 <div class="empty-state card">
     <div class="empty-state-icon"><?= icon('trophy', 'icon icon-2xl') ?></div>
-    <h3>Bracket neconfigurat</h3>
+    <h3>PLAY-OFF neconfigurat</h3>
     <p class="text-muted">Faza eliminatorie va fi afișată aici după configurarea din panoul admin.</p>
 </div>
 <?php else: ?>

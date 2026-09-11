@@ -234,7 +234,7 @@ class AdminController extends BaseController
             redirect('/admin/bracket');
         }
         View::render('admin/bracket', [
-            'title' => 'Bracket',
+            'title' => 'PLAY-OFF',
             'bracketTree' => $svc->buildTree($size),
             'selectedSize' => $size,
             'teams' => $this->app->teams()->all(),

@@ -55,7 +55,7 @@ $motm2 = $live['motm2'] ?? null;
         </div>
 
         <div class="card motm-card-wrap">
-            <h2 class="card-title">Oamenii meciului</h2>
+            <h2 class="card-title">MVP</h2>
             <div class="motm-display" id="motm-display">
                 <?php if ($motm1 || $motm2): ?>
                     <?php if ($motm1): ?>

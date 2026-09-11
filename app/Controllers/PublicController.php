@@ -112,7 +112,7 @@ class PublicController extends BaseController
     public function bracket(): void
     {
         View::render('public/bracket', [
-            'title' => 'Bracket',
+            'title' => 'PLAY-OFF',
             'bracketTree' => $this->app->bracketService()->buildTree(),
             'settings' => $this->settings(),
         ], 'public');

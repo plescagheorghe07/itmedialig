@@ -93,7 +93,7 @@ $motm2 = $p['motm2'] ?? null;
         <div class="motm-panel-title">
             <span class="motm-star-lg"><?= icon('star', 'icon icon-lg') ?></span>
             <div>
-                <h3>Oamenii meciului</h3>
+                <h3>MVP</h3>
                 <p class="text-muted">Selectează câte un jucător reprezentativ pentru fiecare echipă</p>
             </div>
         </div>

@@ -7,7 +7,7 @@ use App\Models\Settings;
 
 class BracketService
 {
-    public const SIZES = [4, 8, 16];
+    public const SIZES = [4, 8, 16, 32];
 
     public function __construct(
         private Bracket $bracket,
@@ -43,11 +43,11 @@ class BracketService
     {
         $count = $this->roundCount($size);
         $all = [
-            16 => 'Optimii de finală',
-            8 => 'Sferturi de finală',
-            4 => 'Semifinale',
-            2 => 'Finală',
-            1 => 'Campioană',
+            16 => 'Șaisprezecimi',
+            8 => 'Optimi',
+            4 => 'Sferturi',
+            2 => 'Semifinală',
+            1 => 'Finală',
         ];
         $labels = [];
         $teamsAtRound = $size;
