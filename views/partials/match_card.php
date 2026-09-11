@@ -53,18 +53,15 @@ $linkTeams = empty($hideMatchActions);
         </div>
     </div>
 
-    <?php if ($showWatch || (!empty($m['live_link']) && ($m['status'] ?? '') === 'se_joaca')): ?>
+    <?php if (empty($hideMatchActions)): ?>
     <div class="match-card-bottom">
-        <?php if ($showWatch): ?>
         <a href="<?= url('/meci/' . $m['id']) ?>"
            class="btn btn-sm <?= $watchClass ?>"
-           data-watch-btn>
+           data-watch-btn
+           style="<?= $showWatch ? '' : 'display:none' ?>">
             <?php if (($m['status'] ?? '') === 'se_joaca'): ?><span class="live-dot"></span><?php endif; ?>
             <?= e($watchLabel) ?>
         </a>
-        <?php else: ?>
-        <a href="<?= url('/meci/' . ($m['id'] ?? '')) ?>" class="btn btn-sm btn-secondary" data-watch-btn style="display:none">Detalii meci</a>
-        <?php endif; ?>
         <a href="<?= e($m['live_link'] ?? '#') ?>" target="_blank" rel="noopener" class="btn btn-sm btn-ghost" data-live-link
            style="<?= (!empty($m['live_link']) && ($m['status'] ?? '') === 'se_joaca') ? '' : 'display:none' ?>">Stream</a>
     </div>
