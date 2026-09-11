@@ -156,8 +156,13 @@ foreach ($teams as $t) {
     <div class="matches-list">
         <?php
         $hideMatchActions = true;
+        $goalsByMatch = [];
+        foreach ($snap['match_goals'] ?? [] as $g) {
+            $goalsByMatch[$g['match_id'] ?? ''][] = $g;
+        }
         foreach ($snap['matches'] ?? [] as $m):
             $m['status'] = $m['status'] ?? 'terminat';
+            $m['events'] = $goalsByMatch[$m['id'] ?? ''] ?? [];
             include __DIR__ . '/../partials/match_card.php';
         endforeach;
         unset($hideMatchActions);

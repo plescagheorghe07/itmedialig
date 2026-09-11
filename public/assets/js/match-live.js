@@ -9,7 +9,16 @@
     const connBadge = document.getElementById('ws-conn-badge');
 
     const ICO_BALL = '<svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a12 12 0 0 1 0 18M12 3a12 12 0 0 0 0 18M3 12h18M5.5 6.5l13 11M5.5 17.5l13-11"/></svg>';
+    const ICO_YELLOW = '<svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="3" width="10" height="18" rx="1.5" fill="#facc15" stroke="#ca8a04"/></svg>';
+    const ICO_RED = '<svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="3" width="10" height="18" rx="1.5" fill="#ef4444" stroke="#b91c1c"/></svg>';
     const ICO_STAR = '<svg class="icon icon-sm motm-star-svg" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><path d="M12 3.5 14.5 9l6 .5-4.6 4 1.4 5.8L12 16.5 6.7 19.3 8.1 13.5 3.5 9.5 9.5 9z"/></svg>';
+    const TYPE_LABEL = { goal: 'Gol', yellow_card: 'Cartonaș galben', red_card: 'Cartonaș roșu' };
+
+    function eventIcon(type) {
+        if (type === 'yellow_card') return ICO_YELLOW;
+        if (type === 'red_card') return ICO_RED;
+        return ICO_BALL;
+    }
 
     function escapeHtml(s) {
         const d = document.createElement('div');
@@ -20,16 +29,18 @@
     function renderGoals(goals) {
         if (!timeline) return;
         if (!goals || !goals.length) {
-            timeline.innerHTML = '<p class="text-muted" id="no-goals-msg">Niciun gol înregistrat încă.</p>';
+            timeline.innerHTML = '<p class="text-muted" id="no-goals-msg">Niciun eveniment înregistrat încă.</p>';
             return;
         }
         timeline.innerHTML = goals.map(g => {
             const isHome = g.team_id === team1Id;
+            const type = g.event_type || 'goal';
             const name = g.player_name || ((g.prenume || '') + ' ' + (g.nume || '')).trim() || 'Jucător necunoscut';
             const team = g.team_nume || '';
-            return `<div class="goal-event ${isHome ? 'team-home' : 'team-away'}" data-goal-id="${g.id}">
-                <span class="goal-minute">${g.minute ? g.minute + "'" : ICO_BALL}</span>
-                <div class="goal-body"><strong>${escapeHtml(name)}</strong><span class="text-muted">${escapeHtml(team)}</span></div>
+            const label = TYPE_LABEL[type] || type;
+            return `<div class="goal-event event-${type} ${isHome ? 'team-home' : 'team-away'}" data-goal-id="${g.id}">
+                <span class="goal-minute">${eventIcon(type)}${g.minute ? ' ' + g.minute + "'" : ''}</span>
+                <div class="goal-body"><strong>${escapeHtml(name)}</strong><span class="text-muted">${escapeHtml(label)} · ${escapeHtml(team)}</span></div>
             </div>`;
         }).join('');
     }
@@ -78,7 +89,7 @@
             board.classList.toggle('is-live', m.status === 'se_joaca');
             board.classList.toggle('is-finished', m.status === 'terminat');
         }
-        if (payload.goals) renderGoals(payload.goals);
+        if (payload.goals || payload.events) renderGoals(payload.events || payload.goals);
         if (payload.motm1 !== undefined || payload.motm2 !== undefined) {
             renderMotm(payload.motm1, payload.motm2);
         } else if (m.motm1 || m.motm2) {
@@ -89,7 +100,7 @@
     function normalizePayload(msg) {
         const data = msg.data || msg;
         if (!data || (data.id !== matchId && data.match?.id !== matchId)) return null;
-        const goals = data.goals || msg.goals;
+        const goals = data.events || data.goals || msg.events || msg.goals;
         const match = data.match || data;
         return {
             match,

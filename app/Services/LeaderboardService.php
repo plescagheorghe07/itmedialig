@@ -112,7 +112,7 @@ class LeaderboardService
 
         $numTeams = (int) $this->db->query('SELECT COUNT(*) FROM teams WHERE is_active = 1')->fetchColumn();
         $numPlayers = (int) $this->db->query('SELECT COUNT(*) FROM players')->fetchColumn();
-        $finished = $this->matches->finished();
+        $finished = $this->matches->finished(false);
         $totalGoals = 0;
         foreach ($finished as $m) {
             $totalGoals += (int) ($m['scor_echipa1'] ?? 0) + (int) ($m['scor_echipa2'] ?? 0);
@@ -164,7 +164,9 @@ class LeaderboardService
 
         try {
             $goalRows = $this->db->query(
-                'SELECT g.player_id, COUNT(*) AS goals FROM match_goals g GROUP BY g.player_id'
+                "SELECT g.player_id, COUNT(*) AS goals FROM match_goals g
+                 WHERE COALESCE(g.event_type, 'goal') = 'goal'
+                 GROUP BY g.player_id"
             )->fetchAll();
         } catch (\Throwable) {
             $goalRows = [];
@@ -176,7 +178,7 @@ class LeaderboardService
             }
         }
 
-        $matches = $this->matches->finished();
+        $matches = $this->matches->finished(false);
         $stats = [];
         foreach ($players as $player) {
             $motm = 0;

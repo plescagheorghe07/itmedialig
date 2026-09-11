@@ -39,17 +39,21 @@ $motm2 = $live['motm2'] ?? null;
             <div class="goals-timeline" id="goals-timeline">
                 <?php foreach ($live['goals'] as $g):
                     $isHome = $g['team_id'] === $m['echipa1_id'];
+                    $etype = $g['event_type'] ?? 'goal';
                 ?>
-                <div class="goal-event <?= $isHome ? 'team-home' : 'team-away' ?>" data-goal-id="<?= e($g['id']) ?>">
-                    <span class="goal-minute"><?= $g['minute'] ? e($g['minute']) . "'" : icon('ball', 'icon icon-sm') ?></span>
+                <div class="goal-event event-<?= e($etype) ?> <?= $isHome ? 'team-home' : 'team-away' ?>" data-goal-id="<?= e($g['id']) ?>">
+                    <span class="goal-minute">
+                        <?= icon(match_event_icon_name($etype), 'icon icon-sm') ?>
+                        <?= $g['minute'] ? e($g['minute']) . "'" : '' ?>
+                    </span>
                     <div class="goal-body">
                         <strong><?= e($g['player_name'] ?: 'Jucător necunoscut') ?></strong>
-                        <span class="text-muted"><?= e($g['team_nume']) ?></span>
+                        <span class="text-muted"><?= e(match_event_type_label($etype)) ?> · <?= e($g['team_nume']) ?></span>
                     </div>
                 </div>
                 <?php endforeach; ?>
                 <?php if (empty($live['goals'])): ?>
-                    <p class="text-muted" id="no-goals-msg">Niciun gol înregistrat încă.</p>
+                    <p class="text-muted" id="no-goals-msg">Niciun eveniment înregistrat încă.</p>
                 <?php endif; ?>
             </div>
         </div>

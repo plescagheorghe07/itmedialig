@@ -10,10 +10,14 @@ class PublicController extends BaseController
     {
         $stats = $this->app->leaderboard()->stats();
         $leaderboard = array_slice($this->app->leaderboard()->compute(), 0, 5);
-        $liveMatches = array_values(array_filter($this->app->matches()->all(), fn($m) => $m['status'] === 'se_joaca'));
-        $upcoming = array_slice(
-            array_filter($this->app->matches()->all(), fn($m) => $m['status'] === 'programat'),
-            0, 5
+        $all = $this->app->matches()->all();
+        $liveMatches = attach_match_events(
+            array_values(array_filter($all, fn($m) => $m['status'] === 'se_joaca')),
+            $this->app->matchGoals()
+        );
+        $upcoming = attach_match_events(
+            array_slice(array_values(array_filter($all, fn($m) => $m['status'] === 'programat')), 0, 5),
+            $this->app->matchGoals()
         );
 
         View::render('public/home', [
@@ -56,6 +60,7 @@ class PublicController extends BaseController
             if ($sa !== $sb) return $sa <=> $sb;
             return strtotime($a['data_meci']) <=> strtotime($b['data_meci']);
         });
+        $matches = attach_match_events($matches, $this->app->matchGoals());
 
         View::render('public/meciuri', [
             'title' => 'Meciuri',
@@ -77,7 +82,10 @@ class PublicController extends BaseController
         }
 
         $players = $this->app->players()->byTeam($id);
-        $matches = $this->app->matches()->byTeamEnriched($id);
+        $matches = attach_match_events(
+            $this->app->matches()->byTeamEnriched($id),
+            $this->app->matchGoals()
+        );
         $playerIds = array_column($players, 'id');
         $goalMap = $this->app->matchGoals()->countByPlayerIds($playerIds);
 
@@ -92,7 +100,7 @@ class PublicController extends BaseController
                 }
             }
             try {
-                $goalsDetail = $this->app->matchGoals()->byPlayer($player['id']);
+                $goalsDetail = $this->app->matchGoals()->byPlayer($player['id'], 'goal');
             } catch (\Throwable) {
                 $goalsDetail = [];
             }

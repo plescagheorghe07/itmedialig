@@ -456,13 +456,14 @@ class AdminController extends BaseController
             $panel = $this->app->matchPanel();
             $result = match ($action) {
                 'start' => $panel->startMatch($id),
-                'goal' => $panel->addGoal(
+                'goal', 'event' => $panel->addEvent(
                     $id,
                     $_POST['team_id'] ?? '',
                     $_POST['player_id'] ?? null ?: null,
-                    $_POST['minute'] !== '' ? (int) $_POST['minute'] : null
+                    $_POST['minute'] !== '' ? (int) $_POST['minute'] : null,
+                    $_POST['event_type'] ?? 'goal'
                 ),
-                'remove_goal' => $panel->removeGoal($_POST['goal_id'] ?? ''),
+                'remove_goal', 'remove_event' => $panel->removeGoal($_POST['goal_id'] ?? $_POST['event_id'] ?? ''),
                 'motm' => $panel->setMotm($id, (int) ($_POST['side'] ?? 1), $_POST['player_id'] ?? null ?: null),
                 'finish' => $panel->finishMatch($id),
                 default => throw new \InvalidArgumentException('Acțiune necunoscută'),
@@ -499,6 +500,10 @@ class AdminController extends BaseController
     {
         $motm1 = $_POST['omul_meciului_echipa1_id'] ?? '';
         $motm2 = $_POST['omul_meciului_echipa2_id'] ?? '';
+        $matchTag = $_POST['match_tag'] ?? 'nedefinit';
+        $knockoutTags = ['saisprezecimi', 'optimi', 'sferturi', 'semi-finala', 'finala_mica', 'finala_mare'];
+        $exclude = isset($_POST['exclude_from_standings']) || in_array($matchTag, $knockoutTags, true);
+
         return [
             'echipa1_id' => $_POST['echipa1_id'] ?? '',
             'echipa2_id' => $_POST['echipa2_id'] ?? '',
@@ -509,9 +514,9 @@ class AdminController extends BaseController
             'omul_meciului_echipa1_id' => $motm1 && $motm1 !== 'none' ? $motm1 : null,
             'omul_meciului_echipa2_id' => $motm2 && $motm2 !== 'none' ? $motm2 : null,
             'live_link' => trim($_POST['live_link'] ?? '') ?: null,
-            'match_tag' => $_POST['match_tag'] ?? 'nedefinit',
+            'match_tag' => $matchTag,
             'locatie' => trim($_POST['locatie'] ?? '') ?: null,
-            'exclude_from_standings' => isset($_POST['exclude_from_standings']) ? 1 : 0,
+            'exclude_from_standings' => $exclude ? 1 : 0,
         ];
     }
 

@@ -4,7 +4,7 @@
 (function () {
     const statusLabels = { se_joaca: 'LIVE', terminat: 'Terminat', programat: 'Programat' };
     const LIVE_TYPES = new Set([
-        'match_update', 'goal_added', 'goal_removed',
+        'match_update', 'goal_added', 'goal_removed', 'event_added',
         'match_started', 'match_finished', 'motm_updated', 'connected'
     ]);
 

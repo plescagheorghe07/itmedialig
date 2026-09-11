@@ -6,6 +6,7 @@ $isScheduled = $m['status'] === 'programat';
 $isFinished = $m['status'] === 'terminat';
 $motm1 = $p['motm1'] ?? null;
 $motm2 = $p['motm2'] ?? null;
+$events = $p['events'] ?? $p['goals'] ?? [];
 ?>
 <div class="page-actions">
     <a href="<?= url('/admin/meciuri') ?>" class="btn btn-secondary"><?= icon('arrow-left', 'icon icon-sm') ?> Înapoi la meciuri</a>
@@ -57,15 +58,17 @@ $motm2 = $p['motm2'] ?? null;
                     <span class="badge badge-finished">Meci terminat</span>
                 <?php endif; ?>
             </div>
-            <?php if ($isLive): ?>
-            <label class="goal-minute-label">Minut gol
-                <input type="number" id="goal-minute" min="1" max="120" placeholder="23">
-            </label>
-            <?php endif; ?>
             <div class="panel-goals-list" id="panel-goals-list">
-                <?php foreach ($p['goals'] as $g): ?>
-                <div class="panel-goal-item">
-                    <span><?= icon('ball', 'icon icon-sm') ?> <?= $g['minute'] ? e($g['minute'])."'" : '' ?> <?= e(trim(($g['prenume']??'').' '.($g['nume']??''))) ?></span>
+                <?php foreach ($events as $g):
+                    $etype = $g['event_type'] ?? 'goal';
+                ?>
+                <div class="panel-goal-item event-<?= e($etype) ?>">
+                    <span class="panel-goal-text">
+                        <?= icon(match_event_icon_name($etype), 'icon icon-sm') ?>
+                        <?= $g['minute'] ? e($g['minute'])."'" : '' ?>
+                        <?= e(trim(($g['prenume']??'').' '.($g['nume']??''))) ?>
+                        <small class="text-muted"><?= e(match_event_type_label($etype)) ?></small>
+                    </span>
                     <?php if ($isLive): ?>
                     <button type="button" class="btn btn-sm btn-ghost" data-remove-goal="<?= e($g['id']) ?>">×</button>
                     <?php endif; ?>
@@ -132,7 +135,36 @@ $motm2 = $p['motm2'] ?? null;
     </div>
 
     <?php if ($isLive): ?>
-    <p class="hint text-muted panel-hint">Apasă pe un jucător pentru a înregistra un gol. Scorul se actualizează instant pe site.</p>
+    <p class="hint text-muted panel-hint">Apasă pe un jucător → alege gol / cartonaș → minut → confirmă.</p>
     <?php endif; ?>
 </div>
+
+<dialog id="eventOverlay" class="event-overlay" aria-label="Adaugă eveniment">
+    <form method="dialog" class="event-overlay-card" id="eventOverlayForm">
+        <button type="button" class="event-overlay-close" data-event-cancel aria-label="Închide">&times;</button>
+        <h3 id="event-player-name">Jucător</h3>
+        <p class="text-muted event-overlay-sub">Alege tipul evenimentului</p>
+        <div class="event-type-grid" role="radiogroup" aria-label="Tip eveniment">
+            <label class="event-type-option">
+                <input type="radio" name="event_type" value="goal" checked>
+                <span><?= icon('ball', 'icon icon-lg') ?> Gol</span>
+            </label>
+            <label class="event-type-option">
+                <input type="radio" name="event_type" value="yellow_card">
+                <span><?= icon('card-yellow', 'icon icon-lg') ?> Galben</span>
+            </label>
+            <label class="event-type-option">
+                <input type="radio" name="event_type" value="red_card">
+                <span><?= icon('card-red', 'icon icon-lg') ?> Roșu</span>
+            </label>
+        </div>
+        <label class="event-minute-label">Minut
+            <input type="number" id="event-minute" name="minute" min="1" max="120" placeholder="ex: 23" required>
+        </label>
+        <div class="event-overlay-actions">
+            <button type="button" class="btn btn-ghost" data-event-cancel>Anulează</button>
+            <button type="submit" class="btn btn-primary" id="event-confirm-btn">Confirmă</button>
+        </div>
+    </form>
+</dialog>
 <script src="<?= asset('js/match-panel.js') ?>"></script>

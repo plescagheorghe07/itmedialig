@@ -84,7 +84,7 @@ $finished = array_filter($matches, fn($m) => $m['status'] === 'terminat');
             <input type="checkbox" name="exclude_from_standings" id="exclude_from_standings" value="1">
             Nu actualiza clasamentul
         </label>
-        <p class="hint text-muted">Bifează pentru meciuri amicale sau demonstrative care nu modifică punctajul.</p>
+        <p class="hint text-muted">Bifat automat pentru fazele eliminatorii. Clasamentul pe <strong>echipe</strong> ignoră meciul; statisticile pe <strong>jucători</strong> (goluri, MVP) rămân.</p>
         <p class="hint text-muted">Oamenii meciului se setează din panoul meciului, după terminare.</p>
         <div class="modal-actions">
             <button type="button" class="btn btn-ghost" onclick="this.closest('dialog').close()">Anulează</button>
@@ -93,8 +93,20 @@ $finished = array_filter($matches, fn($m) => $m['status'] === 'terminat');
     </form>
 </dialog>
 <script>
+const KNOCKOUT_TAGS = ['saisprezecimi', 'optimi', 'sferturi', 'semi-finala', 'finala_mica', 'finala_mare'];
+const matchForm = document.getElementById('matchForm');
+const matchTagSelect = matchForm.match_tag;
+const excludeStandings = matchForm.exclude_from_standings;
+
+function syncExcludeFromTag() {
+    if (KNOCKOUT_TAGS.includes(matchTagSelect.value)) {
+        excludeStandings.checked = true;
+    }
+}
+matchTagSelect.addEventListener('change', syncExcludeFromTag);
+
 function editMatch(m) {
-    const form = document.getElementById('matchForm');
+    const form = matchForm;
     form.action = '<?= url('/admin/meciuri') ?>/' + m.id;
     form.echipa1_id.value = m.echipa1_id;
     form.echipa2_id.value = m.echipa2_id;
@@ -105,13 +117,14 @@ function editMatch(m) {
     form.locatie.value = m.locatie || '';
     form.live_link.value = m.live_link || '';
     form.exclude_from_standings.checked = !!(m.exclude_from_standings == 1 || m.exclude_from_standings === true || m.exclude_from_standings === '1');
+    syncExcludeFromTag();
     if (m.data_meci) form.data_meci.value = m.data_meci.replace(' ', 'T').slice(0, 16);
     document.getElementById('matchModalTitle').textContent = 'Editează meci';
     document.getElementById('matchModal').showModal();
 }
 document.getElementById('matchModal').addEventListener('close', () => {
-    document.getElementById('matchForm').reset();
-    document.getElementById('matchForm').action = '<?= url('/admin/meciuri') ?>';
+    matchForm.reset();
+    matchForm.action = '<?= url('/admin/meciuri') ?>';
     document.getElementById('matchModalTitle').textContent = 'Adaugă meci';
 });
 </script>

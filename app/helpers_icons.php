@@ -30,6 +30,8 @@ function icon(string $name, string $class = 'icon'): string
         'close' => '<path d="M6 6l12 12M18 6 6 18"/>',
         'live' => '<circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="8"/>',
         'goal' => '<circle cx="12" cy="12" r="8"/><path d="M12 4v16M4 12h16"/>',
+        'card-yellow' => '<rect x="7" y="3" width="10" height="18" rx="1.5" fill="#facc15" stroke="#ca8a04"/>',
+        'card-red' => '<rect x="7" y="3" width="10" height="18" rx="1.5" fill="#ef4444" stroke="#b91c1c"/>',
         'refresh' => '<path d="M20 6v5h-5"/><path d="M4 18v-5h5"/><path d="M19 11A7 7 0 0 0 7.5 6.5L4 10M5 13a7 7 0 0 0 11.5 4.5L20 14"/>',
     ];
 

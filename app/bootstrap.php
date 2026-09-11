@@ -177,6 +177,41 @@ function e(?string $value): string
 
 require BASE_PATH . '/app/helpers_icons.php';
 
+/** Attach match_events onto each match row (key: events). */
+function attach_match_events(array $matches, \App\Models\MatchGoal $goalModel): array
+{
+    $ids = array_values(array_filter(array_column($matches, 'id')));
+    $map = [];
+    try {
+        $map = $goalModel->byMatchIds($ids);
+    } catch (\Throwable) {
+        $map = [];
+    }
+    foreach ($matches as &$m) {
+        $m['events'] = $map[$m['id'] ?? ''] ?? [];
+    }
+    unset($m);
+    return $matches;
+}
+
+function match_event_icon_name(string $type): string
+{
+    return match ($type) {
+        'yellow_card' => 'card-yellow',
+        'red_card' => 'card-red',
+        default => 'ball',
+    };
+}
+
+function match_event_type_label(string $type): string
+{
+    return match ($type) {
+        'yellow_card' => 'Cartonaș galben',
+        'red_card' => 'Cartonaș roșu',
+        default => 'Gol',
+    };
+}
+
 function redirect(string $path): never
 {
     header('Location: ' . url($path));

@@ -26,13 +26,14 @@ class MatchPanelService
 
         $players1 = $this->players->byTeam($match['echipa1_id']);
         $players2 = $this->players->byTeam($match['echipa2_id']);
-        $goalEvents = $this->goals->byMatch($matchId);
+        $events = $this->goals->byMatch($matchId);
 
         return [
             'match' => $match,
             'players1' => $players1,
             'players2' => $players2,
-            'goals' => $goalEvents,
+            'goals' => $events,
+            'events' => $events,
             'motm1' => $this->playerBrief($match['omul_meciului_echipa1_id'] ?? null),
             'motm2' => $this->playerBrief($match['omul_meciului_echipa2_id'] ?? null),
         ];
@@ -49,24 +50,42 @@ class MatchPanelService
         return $this->broadcast($matchId, 'match_started');
     }
 
-    public function addGoal(string $matchId, string $teamId, ?string $playerId, ?int $minute): array
+    public function addGoal(string $matchId, string $teamId, ?string $playerId, ?int $minute, string $eventType = MatchGoal::TYPE_GOAL): array
+    {
+        return $this->addEvent($matchId, $teamId, $playerId, $minute, $eventType);
+    }
+
+    public function addEvent(string $matchId, string $teamId, ?string $playerId, ?int $minute, string $eventType = MatchGoal::TYPE_GOAL): array
     {
         $match = $this->requireMatch($matchId);
         if ($match['status'] !== 'se_joaca') {
-            throw new \InvalidArgumentException('Golurile se pot adăuga doar când meciul este în desfășurare.');
+            throw new \InvalidArgumentException('Evenimentele se pot adăuga doar când meciul este în desfășurare.');
         }
         if ($teamId !== $match['echipa1_id'] && $teamId !== $match['echipa2_id']) {
             throw new \InvalidArgumentException('Echipă invalidă pentru acest meci.');
         }
+        if (!in_array($eventType, MatchGoal::TYPES, true)) {
+            throw new \InvalidArgumentException('Tip eveniment invalid.');
+        }
 
-        $goalId = $this->goals->add($matchId, $teamId, $playerId ?: null, $minute);
-        $this->syncScores($matchId);
+        $eventId = $this->goals->add($matchId, $teamId, $playerId ?: null, $minute, $eventType);
+        if ($eventType === MatchGoal::TYPE_GOAL) {
+            $this->syncScores($matchId);
+        }
 
-        $goal = $this->goals->byMatch($matchId);
-        $lastGoal = end($goal) ?: null;
+        $events = $this->goals->byMatch($matchId);
+        $last = null;
+        foreach ($events as $e) {
+            if ($e['id'] === $eventId) {
+                $last = $e;
+                break;
+            }
+        }
 
-        $payload = $this->broadcast($matchId, 'goal_added', ['goal' => $lastGoal]);
-        $payload['goal_id'] = $goalId;
+        $broadcastType = $eventType === MatchGoal::TYPE_GOAL ? 'goal_added' : 'event_added';
+        $payload = $this->broadcast($matchId, $broadcastType, ['event' => $last, 'goal' => $last]);
+        $payload['event_id'] = $eventId;
+        $payload['goal_id'] = $eventId;
         return $payload;
     }
 
@@ -74,12 +93,15 @@ class MatchPanelService
     {
         $goal = $this->goals->find($goalId);
         if (!$goal) {
-            throw new \InvalidArgumentException('Gol negăsit.');
+            throw new \InvalidArgumentException('Eveniment negăsit.');
         }
         $matchId = $goal['match_id'];
+        $wasGoal = ($goal['event_type'] ?? MatchGoal::TYPE_GOAL) === MatchGoal::TYPE_GOAL;
         $this->goals->delete($goalId);
-        $this->syncScores($matchId);
-        return $this->broadcast($matchId, 'goal_removed', ['goal_id' => $goalId]);
+        if ($wasGoal) {
+            $this->syncScores($matchId);
+        }
+        return $this->broadcast($matchId, 'goal_removed', ['goal_id' => $goalId, 'event_id' => $goalId]);
     }
 
     public function setMotm(string $matchId, int $side, ?string $playerId): array
@@ -117,14 +139,23 @@ class MatchPanelService
             'match' => $this->formatMatchForLive($data['match']),
             'motm1' => $data['motm1'],
             'motm2' => $data['motm2'],
-            'goals' => array_map(fn($g) => [
-                'id' => $g['id'],
-                'team_id' => $g['team_id'],
-                'player_id' => $g['player_id'],
-                'player_name' => trim(($g['prenume'] ?? '') . ' ' . ($g['nume'] ?? '')),
-                'team_nume' => $g['team_nume'],
-                'minute' => $g['minute'],
-            ], $data['goals']),
+            'goals' => array_map([$this, 'formatEvent'], $data['events']),
+            'events' => array_map([$this, 'formatEvent'], $data['events']),
+        ];
+    }
+
+    private function formatEvent(array $g): array
+    {
+        return [
+            'id' => $g['id'],
+            'team_id' => $g['team_id'],
+            'player_id' => $g['player_id'],
+            'player_name' => trim(($g['prenume'] ?? '') . ' ' . ($g['nume'] ?? '')),
+            'team_nume' => $g['team_nume'],
+            'minute' => $g['minute'],
+            'event_type' => $g['event_type'] ?? MatchGoal::TYPE_GOAL,
+            'prenume' => $g['prenume'] ?? '',
+            'nume' => $g['nume'] ?? '',
         ];
     }
 
@@ -134,7 +165,7 @@ class MatchPanelService
         if (!$match) {
             return;
         }
-        $counts = $this->goals->countByTeam($matchId);
+        $counts = $this->goals->countGoalsByTeam($matchId);
         $this->matches->update($matchId, array_merge($this->matchFormFromRow($match), [
             'scor_echipa1' => $counts[$match['echipa1_id']] ?? 0,
             'scor_echipa2' => $counts[$match['echipa2_id']] ?? 0,
@@ -144,11 +175,13 @@ class MatchPanelService
     private function broadcast(string $matchId, string $eventType, array $extra = []): array
     {
         $match = $this->matches->findEnriched($matchId);
-        $goals = $this->goals->byMatch($matchId);
+        $events = $this->goals->byMatch($matchId);
+        $formatted = array_map([$this, 'formatEvent'], $events);
         $payload = [
             'type' => $eventType,
             'match' => $this->formatMatchForLive($match),
-            'goals' => $goals,
+            'goals' => $formatted,
+            'events' => $formatted,
             'motm1' => $this->playerBrief($match['omul_meciului_echipa1_id'] ?? null),
             'motm2' => $this->playerBrief($match['omul_meciului_echipa2_id'] ?? null),
         ];
@@ -163,7 +196,8 @@ class MatchPanelService
             'scor_echipa2' => $match['scor_echipa2'],
             'status' => $match['status'],
             'live_link' => $match['live_link'] ?? null,
-            'goals' => $goals,
+            'goals' => $formatted,
+            'events' => $formatted,
         ]);
         return array_merge($payload, $extra);
     }
@@ -231,6 +265,7 @@ class MatchPanelService
             'live_link' => $match['live_link'] ?? null,
             'match_tag' => $match['match_tag'] ?? 'nedefinit',
             'locatie' => $match['locatie'] ?? null,
+            'exclude_from_standings' => !empty($match['exclude_from_standings']) ? 1 : 0,
         ];
     }
 }
